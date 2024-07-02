@@ -8,6 +8,7 @@ import { ForbiddenError } from "../errors/ForbiddenError";
 export interface APIOkOptions
   extends Pick<lambda.APIGatewayProxyResult, "headers" | "isBase64Encoded"> {
   body?: any;
+  statusCode?: 200 | 201 | 202 | 204;
 }
 
 export interface MicroserviceControllerProps {}
@@ -25,7 +26,7 @@ export abstract class MicroserviceController {
     }
 
     return {
-      statusCode: 200,
+      statusCode: opts?.statusCode || 200,
       isBase64Encoded: opts?.isBase64Encoded,
       headers: { ...opts?.headers },
       body,
