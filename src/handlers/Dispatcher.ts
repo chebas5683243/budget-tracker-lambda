@@ -44,9 +44,11 @@ export class LambdaDispatcher {
     const handler = this.handlers.get(`${http.method}:${http.path}`);
 
     logger.info(http.path, {
-      httpMethod: http.method,
-      queryStringParameters: event.queryStringParameters,
-      body: event.body ? JSON.parse(event.body) : null,
+      extra: {
+        httpMethod: http.method,
+        queryStringParameters: event.queryStringParameters,
+        body: event.body ? JSON.parse(event.body) : null,
+      },
     });
 
     if (!handler) {
