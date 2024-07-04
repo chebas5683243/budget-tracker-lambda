@@ -36,7 +36,7 @@ export class LambdaDispatcher {
     this.handlers.set(`${HttpMethod.DELETE}:${path}`, handler);
   }
 
-  public async dispatch(
+  public async handler(
     event: lambda.LambdaFunctionURLEvent,
   ): Promise<lambda.LambdaFunctionURLResult> {
     const { http } = event.requestContext;
@@ -60,3 +60,5 @@ export class LambdaDispatcher {
     return handler(event);
   }
 }
+
+export const dispatcher = new LambdaDispatcher();
