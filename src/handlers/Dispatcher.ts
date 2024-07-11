@@ -2,8 +2,8 @@ import * as lambda from "aws-lambda";
 import { logger } from "../logging";
 
 export type Handler = (
-  event: lambda.LambdaFunctionURLEvent,
-) => Promise<lambda.LambdaFunctionURLResult>;
+  event: lambda.APIGatewayProxyEvent,
+) => Promise<lambda.APIGatewayProxyResult>;
 
 enum HttpMethod {
   GET = "GET",
@@ -37,19 +37,19 @@ export class LambdaDispatcher {
   }
 
   public async handler(
-    event: lambda.LambdaFunctionURLEvent,
-  ): Promise<lambda.LambdaFunctionURLResult> {
-    const { http } = event.requestContext;
-
-    const handler = this.handlers.get(`${http.method}:${http.path}`);
-
-    logger.info(http.path, {
-      extra: {
-        httpMethod: http.method,
+    event: lambda.APIGatewayProxyEvent,
+  ): Promise<lambda.APIGatewayProxyResult> {
+    logger.info(
+      event.resource,
+      JSON.stringify({
+        httpMethod: event.httpMethod,
+        body: event.body,
+        pathParameters: event.pathParameters,
         queryStringParameters: event.queryStringParameters,
-        body: event.body ? JSON.parse(event.body) : null,
-      },
-    });
+      }),
+    );
+
+    const handler = this.handlers.get(`${event.httpMethod}${event.resource}`);
 
     if (!handler) {
       logger.error("Dispatcher", new Error("No handler found"));
