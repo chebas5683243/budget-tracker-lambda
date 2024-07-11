@@ -11,10 +11,10 @@ export interface APIOkOptions
   statusCode?: 200 | 201 | 202 | 204;
 }
 
-export interface MicroserviceControllerProps {}
+export interface BaseControllerProps {}
 
-export abstract class MicroserviceController {
-  constructor(protected props: MicroserviceControllerProps) {}
+export abstract class BaseController {
+  constructor(protected props: BaseControllerProps) {}
 
   public apiOk(opts?: APIOkOptions): lambda.APIGatewayProxyResult {
     let body: string;
