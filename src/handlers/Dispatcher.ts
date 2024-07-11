@@ -39,15 +39,12 @@ export class LambdaDispatcher {
   public async handler(
     event: lambda.APIGatewayProxyEvent,
   ): Promise<lambda.APIGatewayProxyResult> {
-    logger.info(
-      event.resource,
-      JSON.stringify({
-        httpMethod: event.httpMethod,
-        body: event.body,
-        pathParameters: event.pathParameters,
-        queryStringParameters: event.queryStringParameters,
-      }),
-    );
+    logger.info(event.resource, {
+      httpMethod: event.httpMethod,
+      body: event.body ? JSON.parse(event.body) : null,
+      pathParameters: event.pathParameters,
+      queryStringParameters: event.queryStringParameters,
+    });
 
     const handler = this.handlers.get(`${event.httpMethod}${event.resource}`);
 
