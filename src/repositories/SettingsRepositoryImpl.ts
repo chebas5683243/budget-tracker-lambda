@@ -34,7 +34,7 @@ export class SettingsRepositoryImpl implements SettingsRepository {
 
       if (!items) return [];
 
-      return items.map((item) => SettingsMapper.unmarshalSettings(item));
+      return items.map((item) => SettingsMapper.unmarshalSetting(item));
     } catch (e: any) {
       throw new UnknownError({ detail: e.message });
     }

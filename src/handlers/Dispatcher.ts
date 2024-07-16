@@ -46,7 +46,7 @@ export class LambdaDispatcher {
       queryStringParameters: event.queryStringParameters,
     });
 
-    const handler = this.handlers.get(`${event.httpMethod}${event.resource}`);
+    const handler = this.handlers.get(`${event.httpMethod}:${event.resource}`);
 
     if (!handler) {
       logger.error("Dispatcher", new Error("No handler found"));
