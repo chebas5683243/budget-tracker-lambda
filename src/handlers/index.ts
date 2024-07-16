@@ -1,5 +1,6 @@
 import "source-map-support/register";
 import { dispatcher } from "./Dispatcher";
+import { settingsController } from "../controllers";
 
 dispatcher.get("/", async () => {
   return {
@@ -9,5 +10,7 @@ dispatcher.get("/", async () => {
     }),
   };
 });
+
+dispatcher.get("/settings", () => settingsController.getSettings());
 
 export const lambdaHandler = async (event: any) => dispatcher.handler(event);

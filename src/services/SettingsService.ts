@@ -1,5 +1,6 @@
 import { Setting } from "../domains/Setting";
+import { User } from "../domains/User";
 
 export interface SettingsService {
-  getSettings(): Promise<Setting>;
+  findByUserId(user: User): Promise<Setting[]>;
 }
