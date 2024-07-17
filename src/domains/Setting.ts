@@ -1,9 +1,26 @@
+export enum Currency {
+  PEN = "PEN",
+}
+
+export enum Language {
+  SPANISH = "SPANISH",
+  ENGLISH = "ENGLISH",
+}
+
+export enum Theme {
+  DARK = "DARK",
+  LIGHT = "LIGHT",
+  DEFAULT = "DEFAULT",
+}
+
 export class Setting {
   id: string;
 
-  name: string;
+  currency: Currency;
 
-  value: string;
+  language: Language;
+
+  themePreference: Theme;
 
   user: {
     id: string;
