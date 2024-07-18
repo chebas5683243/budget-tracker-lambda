@@ -1,0 +1,12 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "compilerOptions": {
+    "strictPropertyInitialization": false,
+    "sourceMap": true
+  },
+  "include": [
+    "test/**/*.test.ts",
+    "*.js",
+    ".*.js",
+  ]
+}

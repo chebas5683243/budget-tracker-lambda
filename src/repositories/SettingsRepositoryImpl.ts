@@ -1,8 +1,9 @@
-import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
 import { SettingsRepository } from "./SettingsRepository";
 import { Setting } from "../domains/Setting";
 import { UnknownError } from "../errors/UnknownError";
 import { SettingsMapper } from "../mappers/SettingMapper";
+import { NotFoundError } from "../errors/NotFoundError";
 
 interface SettingsRepositoryProps {
   dynamoDbClient: DynamoDBDocumentClient;
@@ -20,23 +21,23 @@ export class SettingsRepositoryImpl implements SettingsRepository {
     }
   }
 
-  async findByUserId(userId: string): Promise<Setting[]> {
+  async findByUserId(userId: string): Promise<Setting> {
+    let error;
     try {
-      const { Items: items } = await this.props.dynamoDbClient.send(
-        new QueryCommand({
+      const { Item } = await this.props.dynamoDbClient.send(
+        new GetCommand({
           TableName: this.props.config.settingsTable,
-          KeyConditionExpression: "userId = :userId",
-          ExpressionAttributeValues: {
-            ":userId": userId,
+          Key: {
+            userId,
           },
         }),
       );
 
-      if (!items) return [];
-
-      return items.map((item) => SettingsMapper.unmarshalSetting(item));
+      if (Item) return SettingsMapper.unmarshalSetting(Item);
+      error = new NotFoundError();
     } catch (e: any) {
       throw new UnknownError({ detail: e.message });
     }
+    throw error || new UnknownError();
   }
 }
