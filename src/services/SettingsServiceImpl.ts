@@ -1,5 +1,4 @@
 import { Setting } from "../domains/Setting";
-import { User } from "../domains/User";
 import { SettingsRepository } from "../repositories/SettingsRepository";
 import { SettingsService } from "./SettingsService";
 
@@ -10,8 +9,8 @@ export interface SettingsServiceProps {
 export class SettingsServiceImpl implements SettingsService {
   constructor(private props: SettingsServiceProps) {}
 
-  async findByUserId(user: User): Promise<Setting[]> {
-    const settings = this.props.settingsRepo.findByUserId(user.id);
+  async findByUserId(setting: Setting): Promise<Setting[]> {
+    const settings = this.props.settingsRepo.findByUserId(setting.user.id);
     return settings;
   }
 }

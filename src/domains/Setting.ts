@@ -1,17 +1,9 @@
-export enum Currency {
-  PEN = "PEN",
-}
-
-export enum Language {
-  SPANISH = "SPANISH",
-  ENGLISH = "ENGLISH",
-}
-
-export enum Theme {
-  DARK = "DARK",
-  LIGHT = "LIGHT",
-  DEFAULT = "DEFAULT",
-}
+import { BadRequestError } from "../errors/BadRequestError";
+import { Currency, Language, Theme } from "../types/Setting";
+import {
+  SettingsValidator,
+  type SettingsValidatorMethods,
+} from "../validators/SettingsValidator";
 
 export class Setting {
   id: string;
@@ -30,5 +22,20 @@ export class Setting {
     if (data) {
       Object.assign(this, data);
     }
+  }
+
+  static instanceFor(
+    instanceSchema: SettingsValidatorMethods,
+    data?: Partial<Setting>,
+  ) {
+    const validation = SettingsValidator[instanceSchema].safeParse(data);
+
+    if (!validation.success) {
+      throw new BadRequestError({
+        message: `InvalidSettingAttributes : ${JSON.stringify(validation.error.errors)}`,
+      });
+    }
+
+    return new Setting(validation.data);
   }
 }
