@@ -38,7 +38,7 @@ export abstract class BaseController {
     headers?: { [key: string]: string },
   ): lambda.APIGatewayProxyResult {
     if (error instanceof GlobalError) {
-      logger.error("API", { ...error, detail: error.detail });
+      logger.error("API", { error, detail: error.detail });
       return {
         headers: { ...headers },
         ...error.getApiData(),
