@@ -77,7 +77,15 @@ export class SettingsRepositoryImpl
         }),
       );
 
-      logger.info("update response", JSON.stringify(response));
+      logger.info("Attributes", JSON.stringify(response.Attributes));
+      logger.info(
+        "ConsumedCapacity",
+        JSON.stringify(response.ConsumedCapacity),
+      );
+      logger.info(
+        "ItemCollectionMetrics",
+        JSON.stringify(response.ItemCollectionMetrics),
+      );
 
       return new Setting({
         id: request.id,
