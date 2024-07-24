@@ -1,13 +1,6 @@
 import { AbstractDynamoDbRepository } from "../../src/repositories/AbstractDynamoDbRepository";
 
-class DynamoDbRepository extends AbstractDynamoDbRepository {
-  getUpdateExpressionWrapper<T extends object>(
-    domain: T,
-    attributes: (keyof T)[],
-  ) {
-    return this.getUpdateExpression(domain, attributes);
-  }
-}
+class DynamoDbRepository extends AbstractDynamoDbRepository {}
 
 describe("AbstractDynamoDbRepository", () => {
   describe("getUpdateExpression", () => {
@@ -22,10 +15,7 @@ describe("AbstractDynamoDbRepository", () => {
       };
 
       // Act
-      const response = repository.getUpdateExpressionWrapper(domain, [
-        "a",
-        "b",
-      ]);
+      const response = repository.getUpdateExpression(domain, ["a", "b"]);
 
       // Assert
       expect(response).toEqual({

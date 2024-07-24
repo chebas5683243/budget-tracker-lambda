@@ -1,15 +1,15 @@
 import { randomUUID } from "node:crypto";
 
 export abstract class AbstractDynamoDbRepository {
-  protected getUUID(): string {
+  public getUUID(): string {
     return randomUUID();
   }
 
-  protected getTimestamp() {
+  public getTimestamp() {
     return Date.now();
   }
 
-  protected getUpdateExpression<T extends object>(
+  public getUpdateExpression<T extends object>(
     domain: T,
     attributes: (keyof T)[],
   ) {

@@ -1,9 +1,7 @@
-import { randomUUID } from "crypto";
 import * as lambda from "aws-lambda";
 import { logger } from "../logging";
 import { GlobalError } from "../errors/GlobalError";
 import { UnknownError } from "../errors/UnknownError";
-import { ForbiddenError } from "../errors/ForbiddenError";
 
 export interface APIOkOptions
   extends Pick<lambda.APIGatewayProxyResult, "headers" | "isBase64Encoded"> {
@@ -16,7 +14,15 @@ export interface BaseControllerProps {}
 export abstract class BaseController {
   constructor(protected props: BaseControllerProps) {}
 
-  protected apiOk(opts?: APIOkOptions): lambda.APIGatewayProxyResult {
+  public parseRequest(event: lambda.APIGatewayEvent): {
+    body?: any;
+  } {
+    return {
+      body: event.body ? JSON.parse(event.body) : undefined,
+    };
+  }
+
+  public apiOk(opts?: APIOkOptions): lambda.APIGatewayProxyResult {
     let body: string;
 
     if (typeof opts?.body === "string") {
@@ -33,7 +39,7 @@ export abstract class BaseController {
     };
   }
 
-  protected apiError(
+  public apiError(
     error: Error,
     headers?: { [key: string]: string },
   ): lambda.APIGatewayProxyResult {
@@ -53,14 +59,5 @@ export abstract class BaseController {
         detail: error.stack,
       }).getApiData(),
     };
-  }
-
-  protected validateApiSecurity(event: lambda.APIGatewayEvent): void {
-    if (event) return;
-    throw new ForbiddenError();
-  }
-
-  protected getUUID(): string {
-    return randomUUID();
   }
 }
