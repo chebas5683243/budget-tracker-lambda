@@ -77,14 +77,20 @@ export class SettingsRepositoryImpl
         }),
       );
 
-      logger.info("Attributes", JSON.stringify(response.Attributes));
+      logger.info("Attributes", JSON.stringify(response.Attributes?.userId));
       logger.info(
-        "ConsumedCapacity",
-        JSON.stringify(response.ConsumedCapacity),
+        "Attributes",
+        JSON.stringify(response.Attributes?.themePreference),
+      );
+      logger.info("Attributes", JSON.stringify(response.Attributes?.language));
+      logger.info("Attributes", JSON.stringify(response.Attributes?.currency));
+      logger.info(
+        "Attributes",
+        JSON.stringify(response.Attributes?.lastUpdateDate),
       );
       logger.info(
-        "ItemCollectionMetrics",
-        JSON.stringify(response.ItemCollectionMetrics),
+        "ConsumedCapacity",
+        JSON.stringify(response.ConsumedCapacity?.TableName),
       );
 
       return new Setting({

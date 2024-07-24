@@ -25,6 +25,7 @@ describe("SettingsRepository", () => {
             language: "language",
             themePreference: "themePreference",
             userId: "userId",
+            lastUpdateDate: 1678734970,
           },
         }),
       } as unknown as DynamoDBClient;
@@ -57,6 +58,7 @@ describe("SettingsRepository", () => {
         user: {
           id: "userId",
         },
+        lastUpdateDate: 1678734970,
       });
     });
   });
