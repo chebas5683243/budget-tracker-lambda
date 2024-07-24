@@ -13,4 +13,6 @@ dispatcher.get("/", async () => {
 
 dispatcher.get("/settings", () => settingsController.getSettings());
 
+dispatcher.update("/settings", (event) => settingsController.update(event));
+
 export const lambdaHandler = async (event: any) => dispatcher.handler(event);

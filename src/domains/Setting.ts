@@ -18,6 +18,8 @@ export class Setting {
     id: string;
   };
 
+  lastUpdateDate: number;
+
   constructor(data?: Partial<Setting>) {
     if (data) {
       Object.assign(this, data);

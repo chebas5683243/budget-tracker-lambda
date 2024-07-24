@@ -13,4 +13,9 @@ export class SettingsServiceImpl implements SettingsService {
     const settings = this.props.settingsRepo.findByUserId(setting.user.id);
     return settings;
   }
+
+  async update(setting: Setting): Promise<Setting> {
+    const response = await this.props.settingsRepo.update(setting);
+    return response;
+  }
 }

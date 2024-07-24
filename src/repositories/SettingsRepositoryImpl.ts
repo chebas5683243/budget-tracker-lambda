@@ -10,6 +10,7 @@ import { UnknownError } from "../errors/UnknownError";
 import { SettingsMapper } from "../mappers/SettingMapper";
 import { NotFoundError } from "../errors/NotFoundError";
 import { AbstractDynamoDbRepository } from "./AbstractDynamoDbRepository";
+import { logger } from "../logging";
 
 interface SettingsRepositoryProps {
   dynamoDbClient: DynamoDBDocumentClient;
@@ -52,15 +53,21 @@ export class SettingsRepositoryImpl
     throw error || new UnknownError();
   }
 
-  async update(setting: Setting): Promise<void> {
+  async update(setting: Setting): Promise<Setting> {
     try {
-      const updateExpression = this.getUpdateExpression(setting, [
+      const request = new Setting({
+        ...setting,
+        lastUpdateDate: this.getTimestamp(),
+      });
+
+      const updateExpression = this.getUpdateExpression(request, [
         "currency",
         "language",
         "themePreference",
+        "lastUpdateDate",
       ]);
 
-      await this.props.dynamoDbClient.send(
+      const response = await this.props.dynamoDbClient.send(
         new UpdateCommand({
           TableName: this.props.config.settingsTable,
           Key: {
@@ -69,6 +76,13 @@ export class SettingsRepositoryImpl
           ...updateExpression,
         }),
       );
+
+      logger.info("update response", JSON.stringify(response));
+
+      return new Setting({
+        id: request.id,
+        lastUpdateDate: request.lastUpdateDate,
+      });
     } catch (e: any) {
       if (e instanceof ConditionalCheckFailedException) {
         throw new NotFoundError();

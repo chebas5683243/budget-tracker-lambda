@@ -3,6 +3,16 @@ import { SettingsRepositoryImpl } from "../../src/repositories/SettingsRepositor
 import { Setting } from "../../src/domains/Setting";
 import { Currency, Language, Theme } from "../../src/types/Setting";
 
+class SettingsRepositoryImplStub extends SettingsRepositoryImpl {
+  public getTimestamp(): number {
+    return 1678734965;
+  }
+
+  public getUUID(): any {
+    return "randomId";
+  }
+}
+
 describe("SettingsRepository", () => {
   describe("findByUserId", () => {
     it("should return settings for user id", async () => {
@@ -19,7 +29,7 @@ describe("SettingsRepository", () => {
         }),
       } as unknown as DynamoDBClient;
 
-      const repository = new SettingsRepositoryImpl({
+      const repository = new SettingsRepositoryImplStub({
         dynamoDbClient: dynamoClientMock,
         config: {
           settingsTable: "settingsTable",
@@ -55,10 +65,10 @@ describe("SettingsRepository", () => {
     it("should update user settings", async () => {
       // Arrange
       const dynamoClientMock = {
-        send: jest.fn().mockResolvedValue(undefined),
+        send: jest.fn(() => Promise.resolve({})),
       } as unknown as DynamoDBClient;
 
-      const settingsRepository = new SettingsRepositoryImpl({
+      const settingsRepository = new SettingsRepositoryImplStub({
         dynamoDbClient: dynamoClientMock,
         config: {
           settingsTable: "settingsTable",
@@ -66,9 +76,8 @@ describe("SettingsRepository", () => {
       });
 
       // Act
-      await settingsRepository.update(
+      const response = await settingsRepository.update(
         new Setting({
-          id: "id",
           currency: Currency.PEN,
           language: Language.SPANISH,
           themePreference: Theme.DARK,
@@ -85,20 +94,26 @@ describe("SettingsRepository", () => {
             TableName: "settingsTable",
             Key: { userId: "userId" },
             UpdateExpression:
-              "SET #currency = :currency, #language = :language, #themePreference = :themePreference",
+              "SET #currency = :currency, #language = :language, #themePreference = :themePreference, #lastUpdateDate = :lastUpdateDate",
             ExpressionAttributeNames: {
               "#language": "language",
               "#currency": "currency",
               "#themePreference": "themePreference",
+              "#lastUpdateDate": "lastUpdateDate",
             },
             ExpressionAttributeValues: {
               ":currency": "PEN",
               ":language": "SPANISH",
               ":themePreference": "DARK",
+              ":lastUpdateDate": 1678734965,
             },
           },
         }),
       );
+
+      expect(response).toEqual({
+        lastUpdateDate: 1678734965,
+      });
     });
   });
 });
