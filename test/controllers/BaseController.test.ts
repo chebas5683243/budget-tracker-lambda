@@ -137,7 +137,7 @@ describe("BaseController", () => {
     });
   });
 
-  describe.only("apiError", () => {
+  describe("apiError", () => {
     it("should return BadRequestError", () => {
       // Prepare
       const controller = new BaseControllerStub(
@@ -262,35 +262,33 @@ describe("BaseController", () => {
   });
 
   describe("parseRequest", () => {
-    it("should parse API request made", () => {
+    it("should parse API request made with no body", () => {
       // Prepare
       const controller = new BaseControllerStub({});
 
       // Execute
       const response = controller.parseRequest({
         httpMethod: "GET",
-        headers: {
-          "IHF-Correlation-Id": "correlationId",
-          "IHF-Application-Id": "applicationId",
-          "IHF-Application-Type": "OKER",
-          "IHF-Employee-Id": "okerId",
-          "IHF-Customer-Id": undefined,
-          "IHF-Customer-Type": undefined,
-        },
+        headers: {},
       } as unknown as lambda.APIGatewayProxyEvent);
 
       // Validate
-      expect(response).toEqual({
-        context: {
-          applicationId: "applicationId",
-          applicationType: "OKER",
-          correlationId: "correlationId",
-          customerId: undefined,
-          customerType: undefined,
-          employeeId: "okerId",
-          resource: "resource",
-        },
-      });
+      expect(response).toEqual({});
+    });
+
+    it("should parse API request made with body", () => {
+      // Prepare
+      const controller = new BaseControllerStub({});
+
+      // Execute
+      const response = controller.parseRequest({
+        httpMethod: "GET",
+        headers: {},
+        body: JSON.stringify({ foo: "bar" }),
+      } as unknown as lambda.APIGatewayProxyEvent);
+
+      // Validate
+      expect(response).toEqual({ body: { foo: "bar" } });
     });
   });
 });
