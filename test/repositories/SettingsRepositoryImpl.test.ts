@@ -19,7 +19,7 @@ describe("SettingsRepository", () => {
         }),
       } as unknown as DynamoDBClient;
 
-      const settingsRepository = new SettingsRepositoryImpl({
+      const repository = new SettingsRepositoryImpl({
         dynamoDbClient: dynamoClientMock,
         config: {
           settingsTable: "settingsTable",
@@ -27,7 +27,7 @@ describe("SettingsRepository", () => {
       });
 
       // Act
-      const response = await settingsRepository.findByUserId("userId");
+      const response = await repository.findByUserId("userId");
 
       // Assert
       expect(dynamoClientMock.send).toHaveBeenCalledWith(

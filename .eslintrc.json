@@ -5,7 +5,7 @@
     "project": ["./tsconfig.json", "./tsconfig.test.json"],
     "tsconfigRootDir": "."
   },
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": ["@typescript-eslint", "jest", "prettier"],
   "extends": [
     "airbnb-base",
     "airbnb-typescript/base",

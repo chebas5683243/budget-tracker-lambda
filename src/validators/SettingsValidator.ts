@@ -4,7 +4,7 @@ import { Currency, Language, Theme } from "../types/Setting";
 export class SettingsValidator {
   static findByUserId = z.object({
     user: z.strictObject({
-      id: z.string(),
+      id: z.string().min(1),
     }),
   });
 

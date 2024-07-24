@@ -1,11 +1,12 @@
-import { DEFAULT_USER_ID } from "../config";
 import { Setting } from "../domains/Setting";
 import { SettingsService } from "../services/SettingsService";
 import { BaseController, BaseControllerProps } from "./BaseController";
 
 export interface SettingsControllerProps extends BaseControllerProps {
   service: SettingsService;
-  config: {};
+  config: {
+    userId: string;
+  };
 }
 
 export class SettingsController extends BaseController {
@@ -16,7 +17,7 @@ export class SettingsController extends BaseController {
   async getSettings() {
     try {
       const setting = Setting.instanceFor("findByUserId", {
-        user: { id: DEFAULT_USER_ID! },
+        user: { id: this.props.config.userId },
       });
       const response = await this.props.service.findByUserId(setting);
 

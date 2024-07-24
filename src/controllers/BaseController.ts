@@ -16,7 +16,7 @@ export interface BaseControllerProps {}
 export abstract class BaseController {
   constructor(protected props: BaseControllerProps) {}
 
-  public apiOk(opts?: APIOkOptions): lambda.APIGatewayProxyResult {
+  protected apiOk(opts?: APIOkOptions): lambda.APIGatewayProxyResult {
     let body: string;
 
     if (typeof opts?.body === "string") {
@@ -33,7 +33,7 @@ export abstract class BaseController {
     };
   }
 
-  public apiError(
+  protected apiError(
     error: Error,
     headers?: { [key: string]: string },
   ): lambda.APIGatewayProxyResult {
@@ -55,7 +55,7 @@ export abstract class BaseController {
     };
   }
 
-  validateApiSecurity(event: lambda.APIGatewayEvent): void {
+  protected validateApiSecurity(event: lambda.APIGatewayEvent): void {
     if (event) return;
     throw new ForbiddenError();
   }
