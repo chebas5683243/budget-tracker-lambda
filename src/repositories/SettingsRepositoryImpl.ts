@@ -70,10 +70,10 @@ export class SettingsRepositoryImpl
         new UpdateCommand({
           TableName: this.props.config.settingsTable,
           Key: {
-            userId: setting.user.id,
+            userId: request.user.id,
           },
-          ...updateExpression,
           ReturnValues: "ALL_NEW",
+          ...updateExpression,
         }),
       );
 

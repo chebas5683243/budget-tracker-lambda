@@ -80,7 +80,7 @@ describe("CategoriesRepository", () => {
   });
 
   describe("findByUserId", () => {
-    it("should return all loans from user", async () => {
+    it("should return all categories from user", async () => {
       // Arrange
       const dynamoDbClientMock = {
         send: jest.fn(() =>
@@ -156,7 +156,7 @@ describe("CategoriesRepository", () => {
       ]);
     });
 
-    it("should return all loans with no status DELETED", async () => {
+    it("should return all categories with no status DELETED", async () => {
       // Arrange
       const dynamoDbClientMock = {
         send: jest.fn(() =>
@@ -220,6 +220,76 @@ describe("CategoriesRepository", () => {
           lastUpdateDate: 1678734965,
         },
       ]);
+    });
+  });
+
+  describe("update", () => {
+    it("should update category", async () => {
+      // Arrange
+      const dynamoDbClientMock = {
+        send: jest.fn(() =>
+          Promise.resolve({
+            Attributes: {
+              id: "id",
+              user: { id: "userId" },
+              icon: "icon",
+              name: "name",
+              status: "ACTIVE",
+              type: "INCOME",
+              creationDate: 1678734965,
+              lastUpdateDate: 1678734965,
+            },
+          }),
+        ),
+      } as unknown as DynamoDBDocumentClient;
+
+      const repository = new CategoriesRepositoryImplStub({
+        dynamoDbClient: dynamoDbClientMock,
+        config: {
+          categoriesTable: "categoriesTable",
+        },
+      });
+
+      // Act
+      const response = await repository.update(
+        new Category({
+          id: "id",
+          user: { id: "userId" },
+          icon: "icon",
+          name: "name",
+        }),
+      );
+
+      // Assert
+      expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          input: {
+            TableName: "categoriesTable",
+            Key: {
+              userId: "userId",
+              id: "id",
+            },
+            UpdateExpression:
+              "SET #name = :name, #icon = :icon, #lastUpdateDate = :lastUpdateDate",
+            ExpressionAttributeNames: {
+              "#name": "name",
+              "#icon": "icon",
+              "#lastUpdateDate": "lastUpdateDate",
+            },
+            ExpressionAttributeValues: {
+              ":name": "name",
+              ":icon": "icon",
+              ":lastUpdateDate": 1678734965,
+            },
+            ReturnValues: "ALL_NEW",
+          },
+        }),
+      );
+
+      expect(response).toEqual({
+        id: "id",
+        lastUpdateDate: 1678734965,
+      });
     });
   });
 });

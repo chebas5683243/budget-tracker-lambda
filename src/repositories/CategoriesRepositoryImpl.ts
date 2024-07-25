@@ -2,6 +2,7 @@ import {
   DynamoDBDocumentClient,
   PutCommand,
   QueryCommand,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { Category } from "../domains/Category";
 import { AbstractDynamoDbRepository } from "./AbstractDynamoDbRepository";
@@ -74,6 +75,40 @@ export class CategoriesRepositoryImpl
       if (e instanceof GlobalError) {
         throw e;
       }
+      throw new UnknownError({ detail: e.message });
+    }
+  }
+
+  async update(category: Category): Promise<Category> {
+    try {
+      const request = CategoriesMapper.marshalCategory({
+        ...category,
+        lastUpdateDate: this.getTimestamp(),
+      });
+
+      const updateExpression = this.getUpdateExpression(request, [
+        "name",
+        "icon",
+        "lastUpdateDate",
+      ]);
+
+      const { Attributes: updatedItem } = await this.props.dynamoDbClient.send(
+        new UpdateCommand({
+          TableName: this.props.config.categoriesTable,
+          Key: {
+            userId: request.userId,
+            id: request.id,
+          },
+          ReturnValues: "ALL_NEW",
+          ...updateExpression,
+        }),
+      );
+
+      return new Category({
+        id: updatedItem?.id,
+        lastUpdateDate: updatedItem?.lastUpdateDate,
+      });
+    } catch (e: any) {
       throw new UnknownError({ detail: e.message });
     }
   }
