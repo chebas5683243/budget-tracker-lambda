@@ -78,4 +78,148 @@ describe("CategoriesRepository", () => {
       });
     });
   });
+
+  describe("findByUserId", () => {
+    it("should return all loans from user", async () => {
+      // Arrange
+      const dynamoDbClientMock = {
+        send: jest.fn(() =>
+          Promise.resolve({
+            Items: [
+              {
+                id: "id-1",
+                userId: "userId",
+                icon: "icon-1",
+                name: "name-1",
+                status: "ACTIVE",
+                type: "INCOME",
+                creationDate: 1678734965,
+                lastUpdateDate: 1678734965,
+              },
+              {
+                id: "id-2",
+                userId: "userId",
+                icon: "icon-2",
+                name: "name-2",
+                status: "ACTIVE",
+                type: "EXPENSE",
+                creationDate: 1678734965,
+                lastUpdateDate: 1678734965,
+              },
+            ],
+          }),
+        ),
+      } as unknown as DynamoDBDocumentClient;
+
+      const repository = new CategoriesRepositoryImplStub({
+        dynamoDbClient: dynamoDbClientMock,
+        config: {
+          categoriesTable: "categoriesTable",
+        },
+      });
+
+      // Act
+      const response = await repository.findByUserId("userId");
+
+      // Assert
+      expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          input: {
+            TableName: "categoriesTable",
+            KeyConditionExpression: "userId = :userId",
+            ExpressionAttributeValues: { ":userId": "userId" },
+          },
+        }),
+      );
+
+      expect(response).toEqual([
+        {
+          id: "id-1",
+          user: { id: "userId" },
+          icon: "icon-1",
+          name: "name-1",
+          status: "ACTIVE",
+          type: "INCOME",
+          creationDate: 1678734965,
+          lastUpdateDate: 1678734965,
+        },
+        {
+          id: "id-2",
+          user: { id: "userId" },
+          icon: "icon-2",
+          name: "name-2",
+          status: "ACTIVE",
+          type: "EXPENSE",
+          creationDate: 1678734965,
+          lastUpdateDate: 1678734965,
+        },
+      ]);
+    });
+
+    it("should return all loans with no status DELETED", async () => {
+      // Arrange
+      const dynamoDbClientMock = {
+        send: jest.fn(() =>
+          Promise.resolve({
+            Items: [
+              {
+                id: "id-1",
+                userId: "userId",
+                icon: "icon-1",
+                name: "name-1",
+                status: "ACTIVE",
+                type: "INCOME",
+                creationDate: 1678734965,
+                lastUpdateDate: 1678734965,
+              },
+              {
+                id: "id-2",
+                userId: "userId",
+                icon: "icon-2",
+                name: "name-2",
+                status: "DELETED",
+                type: "EXPENSE",
+                creationDate: 1678734965,
+                lastUpdateDate: 1678734965,
+              },
+            ],
+          }),
+        ),
+      } as unknown as DynamoDBDocumentClient;
+
+      const repository = new CategoriesRepositoryImplStub({
+        dynamoDbClient: dynamoDbClientMock,
+        config: {
+          categoriesTable: "categoriesTable",
+        },
+      });
+
+      // Act
+      const response = await repository.findByUserId("userId");
+
+      // Assert
+      expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          input: {
+            TableName: "categoriesTable",
+            KeyConditionExpression: "userId = :userId",
+            ExpressionAttributeValues: { ":userId": "userId" },
+          },
+        }),
+      );
+
+      expect(response).toEqual([
+        {
+          id: "id-1",
+          user: { id: "userId" },
+          icon: "icon-1",
+          name: "name-1",
+          status: "ACTIVE",
+          type: "INCOME",
+          creationDate: 1678734965,
+          lastUpdateDate: 1678734965,
+        },
+      ]);
+    });
+  });
 });
