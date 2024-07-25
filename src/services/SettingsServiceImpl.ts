@@ -10,7 +10,7 @@ export class SettingsServiceImpl implements SettingsService {
   constructor(private props: SettingsServiceProps) {}
 
   async findByUserId(setting: Setting): Promise<Setting> {
-    const settings = this.props.settingsRepo.findByUserId(setting.user.id);
+    const settings = this.props.settingsRepo.findByUserId(setting.user?.id!);
     return settings;
   }
 

@@ -7,7 +7,7 @@ import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { SettingsRepository } from "./SettingsRepository";
 import { Setting } from "../domains/Setting";
 import { UnknownError } from "../errors/UnknownError";
-import { SettingsMapper } from "../mappers/SettingMapper";
+import { SettingsMapper } from "../mappers/SettingsMapper";
 import { NotFoundError } from "../errors/NotFoundError";
 import { AbstractDynamoDbRepository } from "./AbstractDynamoDbRepository";
 
@@ -66,7 +66,7 @@ export class SettingsRepositoryImpl
         "lastUpdateDate",
       ]);
 
-      const { Attributes } = await this.props.dynamoDbClient.send(
+      const { Attributes: updatedItem } = await this.props.dynamoDbClient.send(
         new UpdateCommand({
           TableName: this.props.config.settingsTable,
           Key: {
@@ -78,8 +78,8 @@ export class SettingsRepositoryImpl
       );
 
       return new Setting({
-        id: Attributes?.id,
-        lastUpdateDate: Attributes?.lastUpdateDate,
+        id: updatedItem?.id,
+        lastUpdateDate: updatedItem?.lastUpdateDate,
       });
     } catch (e: any) {
       if (e instanceof ConditionalCheckFailedException) {

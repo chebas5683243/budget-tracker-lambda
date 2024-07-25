@@ -4,6 +4,7 @@ import {
   SettingsValidator,
   type SettingsValidatorMethods,
 } from "../validators/SettingsValidator";
+import { User } from "./User";
 
 export class Setting {
   id: string;
@@ -14,9 +15,7 @@ export class Setting {
 
   themePreference: Theme;
 
-  user: {
-    id: string;
-  };
+  user: Partial<User>;
 
   lastUpdateDate: number;
 
