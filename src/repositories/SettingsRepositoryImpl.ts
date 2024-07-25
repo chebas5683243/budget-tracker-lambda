@@ -10,7 +10,6 @@ import { UnknownError } from "../errors/UnknownError";
 import { SettingsMapper } from "../mappers/SettingMapper";
 import { NotFoundError } from "../errors/NotFoundError";
 import { AbstractDynamoDbRepository } from "./AbstractDynamoDbRepository";
-import { logger } from "../logging";
 
 interface SettingsRepositoryProps {
   dynamoDbClient: DynamoDBDocumentClient;
@@ -67,35 +66,20 @@ export class SettingsRepositoryImpl
         "lastUpdateDate",
       ]);
 
-      const response = await this.props.dynamoDbClient.send(
+      const { Attributes } = await this.props.dynamoDbClient.send(
         new UpdateCommand({
           TableName: this.props.config.settingsTable,
           Key: {
             userId: setting.user.id,
           },
           ...updateExpression,
+          ReturnValues: "ALL_NEW",
         }),
       );
 
-      logger.info("Attributes", JSON.stringify(response.Attributes?.userId));
-      logger.info(
-        "Attributes",
-        JSON.stringify(response.Attributes?.themePreference),
-      );
-      logger.info("Attributes", JSON.stringify(response.Attributes?.language));
-      logger.info("Attributes", JSON.stringify(response.Attributes?.currency));
-      logger.info(
-        "Attributes",
-        JSON.stringify(response.Attributes?.lastUpdateDate),
-      );
-      logger.info(
-        "ConsumedCapacity",
-        JSON.stringify(response.ConsumedCapacity?.TableName),
-      );
-
       return new Setting({
-        id: request.id,
-        lastUpdateDate: request.lastUpdateDate,
+        id: Attributes?.id,
+        lastUpdateDate: Attributes?.lastUpdateDate,
       });
     } catch (e: any) {
       if (e instanceof ConditionalCheckFailedException) {

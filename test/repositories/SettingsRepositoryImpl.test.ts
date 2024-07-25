@@ -67,7 +67,11 @@ describe("SettingsRepository", () => {
     it("should update user settings", async () => {
       // Arrange
       const dynamoClientMock = {
-        send: jest.fn(() => Promise.resolve({})),
+        send: jest.fn(() =>
+          Promise.resolve({
+            Attributes: { id: "id", lastUpdateDate: 1678734965 },
+          }),
+        ),
       } as unknown as DynamoDBClient;
 
       const settingsRepository = new SettingsRepositoryImplStub({
@@ -109,11 +113,13 @@ describe("SettingsRepository", () => {
               ":themePreference": "DARK",
               ":lastUpdateDate": 1678734965,
             },
+            ReturnValues: "ALL_NEW",
           },
         }),
       );
 
       expect(response).toEqual({
+        id: "id",
         lastUpdateDate: 1678734965,
       });
     });
