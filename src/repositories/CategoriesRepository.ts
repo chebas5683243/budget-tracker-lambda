@@ -4,4 +4,5 @@ export interface CategoriesRepository {
   create(category: Category): Promise<Category>;
   findByUserId(userId: string): Promise<Category[]>;
   update(category: Category): Promise<Category>;
+  delete(category: Category): Promise<void>;
 }

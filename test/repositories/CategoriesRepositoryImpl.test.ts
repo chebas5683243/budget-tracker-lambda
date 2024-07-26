@@ -1,7 +1,7 @@
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { CategoriesRepositoryImpl } from "../../src/repositories/CategoriesRepositoryImpl";
 import { Category } from "../../src/domains/Category";
-import { CategoryStatus, CategoryType } from "../../src/types/Category";
+import { CategoryType } from "../../src/types/Category";
 
 class CategoriesRepositoryImplStub extends CategoriesRepositoryImpl {
   public getTimestamp(): number {
@@ -45,7 +45,6 @@ describe("CategoriesRepository", () => {
         new Category({
           icon: "icon",
           name: "name",
-          status: CategoryStatus.ACTIVE,
           type: CategoryType.INCOME,
           user: {
             id: "userId",
@@ -290,6 +289,55 @@ describe("CategoriesRepository", () => {
         id: "id",
         lastUpdateDate: 1678734965,
       });
+    });
+  });
+
+  describe("delete", () => {
+    it("should delete an existing category", async () => {
+      // Arrange
+      const dynamoDbClientMock = {
+        send: jest.fn(() => Promise.resolve()),
+      } as unknown as DynamoDBDocumentClient;
+
+      const repository = new CategoriesRepositoryImplStub({
+        dynamoDbClient: dynamoDbClientMock,
+        config: {
+          categoriesTable: "categoriesTable",
+        },
+      });
+
+      // Act
+      const response = await repository.delete(
+        new Category({
+          id: "id",
+          user: { id: "userId" },
+        }),
+      );
+
+      // Assert
+      expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          input: {
+            TableName: "categoriesTable",
+            Key: {
+              userId: "userId",
+              id: "id",
+            },
+            UpdateExpression:
+              "SET #status = :status, #lastUpdateDate = :lastUpdateDate",
+            ExpressionAttributeNames: {
+              "#status": "status",
+              "#lastUpdateDate": "lastUpdateDate",
+            },
+            ExpressionAttributeValues: {
+              ":status": "DELETED",
+              ":lastUpdateDate": 1678734965,
+            },
+          },
+        }),
+      );
+
+      expect(response).toBeUndefined();
     });
   });
 });

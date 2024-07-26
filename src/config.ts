@@ -1,1 +1,6 @@
-export const { SETTINGS_TABLE, DEFAULT_USER_ID } = process.env;
+export const {
+  SETTINGS_TABLE,
+  CATEGORIES_TABLE,
+  TRANSACTIONS_TABLE,
+  DEFAULT_USER_ID,
+} = process.env;

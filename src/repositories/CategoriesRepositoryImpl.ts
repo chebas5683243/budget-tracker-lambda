@@ -34,6 +34,7 @@ export class CategoriesRepositoryImpl
         ...category,
         id: this.getUUID(),
         creationDate: this.getTimestamp(),
+        status: CategoryStatus.ACTIVE,
       });
 
       const { Attributes: newItem } = await this.props.dynamoDbClient.send(
@@ -108,6 +109,34 @@ export class CategoriesRepositoryImpl
         id: updatedItem?.id,
         lastUpdateDate: updatedItem?.lastUpdateDate,
       });
+    } catch (e: any) {
+      throw new UnknownError({ detail: e.message });
+    }
+  }
+
+  async delete(category: Category): Promise<void> {
+    try {
+      const request = CategoriesMapper.marshalCategory({
+        ...category,
+        lastUpdateDate: this.getTimestamp(),
+        status: CategoryStatus.DELETED,
+      });
+
+      const updateExpression = this.getUpdateExpression(request, [
+        "status",
+        "lastUpdateDate",
+      ]);
+
+      await this.props.dynamoDbClient.send(
+        new UpdateCommand({
+          TableName: this.props.config.categoriesTable,
+          Key: {
+            userId: request.userId,
+            id: request.id,
+          },
+          ...updateExpression,
+        }),
+      );
     } catch (e: any) {
       throw new UnknownError({ detail: e.message });
     }
