@@ -18,19 +18,7 @@ describe("CategoriesRepository", () => {
     it("should create a category", async () => {
       // Arrange
       const dynamoDbClientMock = {
-        send: jest.fn(() =>
-          Promise.resolve({
-            Attributes: {
-              id: "randomId",
-              icon: "icon",
-              name: "name",
-              status: "ACTIVE",
-              type: "INCOME",
-              userId: "userId",
-              creationDate: 1678734965,
-            },
-          }),
-        ),
+        send: jest.fn(() => Promise.resolve()),
       } as unknown as DynamoDBDocumentClient;
 
       const repository = new CategoriesRepositoryImplStub({
@@ -66,7 +54,6 @@ describe("CategoriesRepository", () => {
               creationDate: 1678734965,
             },
             TableName: "categoriesTable",
-            ReturnValues: "ALL_NEW",
           },
         }),
       );

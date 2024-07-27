@@ -37,17 +37,16 @@ export class CategoriesRepositoryImpl
         status: CategoryStatus.ACTIVE,
       });
 
-      const { Attributes: newItem } = await this.props.dynamoDbClient.send(
+      await this.props.dynamoDbClient.send(
         new PutCommand({
           Item: request,
           TableName: this.props.config.categoriesTable,
-          ReturnValues: "ALL_NEW",
         }),
       );
 
       return new Category({
-        id: newItem?.id,
-        creationDate: newItem?.creationDate,
+        id: request?.id,
+        creationDate: request?.creationDate,
       });
     } catch (e: any) {
       throw new UnknownError({ detail: e.message });
