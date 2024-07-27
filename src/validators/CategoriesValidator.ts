@@ -25,9 +25,8 @@ export class CategoriesValidator {
       }),
       name: z.string().optional(),
       icon: z.string().optional(),
-      type: z.nativeEnum(CategoryType).optional(),
     })
-    .refine((data) => data.name || data.icon || data.type);
+    .refine((data) => data.name || data.icon);
 
   static delete = z.object({
     id: z.string(),

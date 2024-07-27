@@ -26,7 +26,6 @@ describe("CategoriesController", () => {
 
       // Act
       const response = await controller.create({
-        pathParameters: { loanId: "id" },
         body: JSON.stringify({
           name: "name",
           icon: "icon",
@@ -154,7 +153,6 @@ describe("CategoriesController", () => {
         body: JSON.stringify({
           name: "name",
           icon: "icon",
-          type: "INCOME",
         }),
       } as unknown as lambda.APIGatewayEvent);
 
@@ -164,7 +162,6 @@ describe("CategoriesController", () => {
         user: { id: "userId" },
         icon: "icon",
         name: "name",
-        type: "INCOME",
       });
 
       expect(response).toEqual(
