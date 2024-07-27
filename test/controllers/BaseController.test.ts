@@ -292,3 +292,7 @@ describe("BaseController", () => {
     });
   });
 });
+
+jest.mock("../../src/logging", () => ({
+  logger: { info: jest.fn(), error: jest.fn() },
+}));

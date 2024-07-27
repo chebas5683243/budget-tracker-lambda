@@ -1,16 +1,14 @@
 import { z } from "zod";
-import { CategoryStatus, CategoryType } from "../types/Category";
+import { CategoryType } from "../types/Category";
 
 export class CategoriesValidator {
   static create = z.object({
-    id: z.string(),
     user: z.strictObject({
       id: z.string(),
     }),
     name: z.string(),
     icon: z.string(),
     type: z.nativeEnum(CategoryType),
-    status: z.literal(CategoryStatus.ACTIVE),
   });
 
   static findByUserId = z.object({
@@ -36,7 +34,6 @@ export class CategoriesValidator {
     user: z.strictObject({
       id: z.string(),
     }),
-    status: z.literal(CategoryStatus.DELETED),
   });
 }
 

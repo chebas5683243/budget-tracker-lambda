@@ -141,6 +141,7 @@ describe("CategoriesService", () => {
           user: { id: "userId" },
           icon: "icon",
           name: "name",
+          type: CategoryType.INCOME,
         }),
       );
 
@@ -150,6 +151,7 @@ describe("CategoriesService", () => {
         user: { id: "userId" },
         icon: "icon",
         name: "name",
+        type: "INCOME",
       });
 
       expect(response).toEqual({

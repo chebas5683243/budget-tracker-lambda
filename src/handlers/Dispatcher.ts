@@ -9,7 +9,7 @@ enum HttpMethod {
   GET = "GET",
   POST = "POST",
   PATCH = "PATCH",
-  UPDATE = "UPDATE",
+  UPDATE = "PUT",
   DELETE = "DELETE",
 }
 

@@ -3,16 +3,6 @@ import { SettingsService } from "../../src/services/SettingsService";
 import { SettingsController } from "../../src/controllers/SettingsController";
 
 describe("SettingsController", () => {
-  let OLD_ENV: NodeJS.ProcessEnv;
-
-  beforeEach(() => {
-    OLD_ENV = process.env;
-  });
-
-  afterEach(() => {
-    process.env = OLD_ENV;
-  });
-
   describe("getSettings", () => {
     it("should find settings by userId", async () => {
       // Arrange
