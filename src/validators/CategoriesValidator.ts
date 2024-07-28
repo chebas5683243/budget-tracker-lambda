@@ -26,7 +26,9 @@ export class CategoriesValidator {
       name: z.string().optional(),
       icon: z.string().optional(),
     })
-    .refine((data) => data.name || data.icon);
+    .refine((data) => data.name || data.icon, {
+      message: "One of the following is required: name or icon",
+    });
 
   static delete = z.object({
     id: z.string(),

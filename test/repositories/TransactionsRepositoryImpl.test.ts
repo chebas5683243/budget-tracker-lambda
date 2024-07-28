@@ -1,9 +1,8 @@
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { CategoriesRepositoryImpl } from "../../src/repositories/CategoriesRepositoryImpl";
-import { Category } from "../../src/domains/Category";
-import { CategoryType } from "../../src/types/Category";
+import { TransactionsRepositoryImpl } from "../../src/repositories/TransactionsRepositoryImpl";
+import { Transaction } from "../../src/domains/Transaction";
 
-class CategoriesRepositoryImplStub extends CategoriesRepositoryImpl {
+class TransactionsRepositoryImplStub extends TransactionsRepositoryImpl {
   public getTimestamp(): number {
     return 1678734965;
   }
@@ -13,30 +12,33 @@ class CategoriesRepositoryImplStub extends CategoriesRepositoryImpl {
   }
 }
 
-describe("CategoriesRepository", () => {
+describe("TransactionsRepository", () => {
   describe("create", () => {
-    it("should create a category", async () => {
+    it("should create a transaction", async () => {
       // Arrange
       const dynamoDbClientMock = {
         send: jest.fn(() => Promise.resolve()),
       } as unknown as DynamoDBDocumentClient;
 
-      const repository = new CategoriesRepositoryImplStub({
+      const repository = new TransactionsRepositoryImplStub({
         dynamoDbClient: dynamoDbClientMock,
         config: {
-          categoriesTable: "categoriesTable",
+          transactionsTable: "transactionsTable",
         },
       });
 
       // Act
       const response = await repository.create(
-        new Category({
-          icon: "icon",
-          name: "name",
-          type: CategoryType.INCOME,
+        new Transaction({
           user: {
             id: "userId",
           },
+          category: {
+            id: "categoryId",
+          },
+          amount: 1000,
+          description: "description",
+          transactionDate: 1678730000,
         }),
       );
 
@@ -46,14 +48,15 @@ describe("CategoriesRepository", () => {
           input: {
             Item: {
               id: "randomId",
-              icon: "icon",
-              name: "name",
-              status: "ACTIVE",
-              type: "INCOME",
               userId: "userId",
+              categoryId: "categoryId",
+              amount: 1000,
+              description: "description",
+              transactionDate: 1678730000,
+              status: "ACTIVE",
               creationDate: 1678734965,
             },
-            TableName: "categoriesTable",
+            TableName: "transactionsTable",
           },
         }),
       );
@@ -66,7 +69,7 @@ describe("CategoriesRepository", () => {
   });
 
   describe("findByUserId", () => {
-    it("should return all categories from user", async () => {
+    it("should return all transactions from user", async () => {
       // Arrange
       const dynamoDbClientMock = {
         send: jest.fn(() =>
@@ -74,21 +77,23 @@ describe("CategoriesRepository", () => {
             Items: [
               {
                 id: "id-1",
-                userId: "userId",
-                icon: "icon-1",
-                name: "name-1",
+                userId: "userId-1",
+                categoryId: "categoryId-1",
+                amount: 1000,
+                description: "description-1",
+                transactionDate: 1678730000,
                 status: "ACTIVE",
-                type: "INCOME",
                 creationDate: 1678734965,
                 lastUpdateDate: 1678734965,
               },
               {
                 id: "id-2",
-                userId: "userId",
-                icon: "icon-2",
-                name: "name-2",
+                userId: "userId-2",
+                categoryId: "categoryId-2",
+                amount: 1000,
+                description: "description-2",
+                transactionDate: 1678730000,
                 status: "ACTIVE",
-                type: "EXPENSE",
                 creationDate: 1678734965,
                 lastUpdateDate: 1678734965,
               },
@@ -97,10 +102,10 @@ describe("CategoriesRepository", () => {
         ),
       } as unknown as DynamoDBDocumentClient;
 
-      const repository = new CategoriesRepositoryImplStub({
+      const repository = new TransactionsRepositoryImplStub({
         dynamoDbClient: dynamoDbClientMock,
         config: {
-          categoriesTable: "categoriesTable",
+          transactionsTable: "transactionsTable",
         },
       });
 
@@ -111,7 +116,7 @@ describe("CategoriesRepository", () => {
       expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
         expect.objectContaining({
           input: {
-            TableName: "categoriesTable",
+            TableName: "transactionsTable",
             KeyConditionExpression: "userId = :userId",
             ExpressionAttributeValues: { ":userId": "userId" },
           },
@@ -121,28 +126,30 @@ describe("CategoriesRepository", () => {
       expect(response).toEqual([
         {
           id: "id-1",
-          user: { id: "userId" },
-          icon: "icon-1",
-          name: "name-1",
+          user: { id: "userId-1" },
+          category: { id: "categoryId-1" },
+          amount: 1000,
+          description: "description-1",
+          transactionDate: 1678730000,
           status: "ACTIVE",
-          type: "INCOME",
           creationDate: 1678734965,
           lastUpdateDate: 1678734965,
         },
         {
           id: "id-2",
-          user: { id: "userId" },
-          icon: "icon-2",
-          name: "name-2",
+          user: { id: "userId-2" },
+          category: { id: "categoryId-2" },
+          amount: 1000,
+          description: "description-2",
+          transactionDate: 1678730000,
           status: "ACTIVE",
-          type: "EXPENSE",
           creationDate: 1678734965,
           lastUpdateDate: 1678734965,
         },
       ]);
     });
 
-    it("should return all categories with no status DELETED", async () => {
+    it("should return all transactions with no status DELETED", async () => {
       // Arrange
       const dynamoDbClientMock = {
         send: jest.fn(() =>
@@ -150,21 +157,23 @@ describe("CategoriesRepository", () => {
             Items: [
               {
                 id: "id-1",
-                userId: "userId",
-                icon: "icon-1",
-                name: "name-1",
+                userId: "userId-1",
+                categoryId: "categoryId-1",
+                amount: 1000,
+                description: "description-1",
+                transactionDate: 1678730000,
                 status: "ACTIVE",
-                type: "INCOME",
                 creationDate: 1678734965,
                 lastUpdateDate: 1678734965,
               },
               {
                 id: "id-2",
-                userId: "userId",
-                icon: "icon-2",
-                name: "name-2",
+                userId: "userId-2",
+                categoryId: "categoryId-2",
+                amount: 1000,
+                description: "description-2",
+                transactionDate: 1678730000,
                 status: "DELETED",
-                type: "EXPENSE",
                 creationDate: 1678734965,
                 lastUpdateDate: 1678734965,
               },
@@ -173,10 +182,10 @@ describe("CategoriesRepository", () => {
         ),
       } as unknown as DynamoDBDocumentClient;
 
-      const repository = new CategoriesRepositoryImplStub({
+      const repository = new TransactionsRepositoryImplStub({
         dynamoDbClient: dynamoDbClientMock,
         config: {
-          categoriesTable: "categoriesTable",
+          transactionsTable: "transactionsTable",
         },
       });
 
@@ -187,7 +196,7 @@ describe("CategoriesRepository", () => {
       expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
         expect.objectContaining({
           input: {
-            TableName: "categoriesTable",
+            TableName: "transactionsTable",
             KeyConditionExpression: "userId = :userId",
             ExpressionAttributeValues: { ":userId": "userId" },
           },
@@ -197,11 +206,12 @@ describe("CategoriesRepository", () => {
       expect(response).toEqual([
         {
           id: "id-1",
-          user: { id: "userId" },
-          icon: "icon-1",
-          name: "name-1",
+          user: { id: "userId-1" },
+          category: { id: "categoryId-1" },
+          amount: 1000,
+          description: "description-1",
+          transactionDate: 1678730000,
           status: "ACTIVE",
-          type: "INCOME",
           creationDate: 1678734965,
           lastUpdateDate: 1678734965,
         },
@@ -210,7 +220,7 @@ describe("CategoriesRepository", () => {
   });
 
   describe("update", () => {
-    it("should update category", async () => {
+    it("should update transaction", async () => {
       // Arrange
       const dynamoDbClientMock = {
         send: jest.fn(() =>
@@ -218,10 +228,11 @@ describe("CategoriesRepository", () => {
             Attributes: {
               id: "id",
               userId: "userId",
-              icon: "icon",
-              name: "name",
+              categoryId: "categoryId",
+              amount: 1000,
+              description: "description",
+              transactionDate: 1678730000,
               status: "ACTIVE",
-              type: "INCOME",
               creationDate: 1678734965,
               lastUpdateDate: 1678734965,
             },
@@ -229,20 +240,22 @@ describe("CategoriesRepository", () => {
         ),
       } as unknown as DynamoDBDocumentClient;
 
-      const repository = new CategoriesRepositoryImplStub({
+      const repository = new TransactionsRepositoryImplStub({
         dynamoDbClient: dynamoDbClientMock,
         config: {
-          categoriesTable: "categoriesTable",
+          transactionsTable: "transactionsTable",
         },
       });
 
       // Act
       const response = await repository.update(
-        new Category({
+        new Transaction({
           id: "id",
           user: { id: "userId" },
-          icon: "icon",
-          name: "name",
+          category: { id: "categoryId" },
+          amount: 1000,
+          description: "description",
+          transactionDate: 1678730000,
         }),
       );
 
@@ -250,21 +263,25 @@ describe("CategoriesRepository", () => {
       expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
         expect.objectContaining({
           input: {
-            TableName: "categoriesTable",
+            TableName: "transactionsTable",
             Key: {
               userId: "userId",
               id: "id",
             },
             UpdateExpression:
-              "SET #name = :name, #icon = :icon, #lastUpdateDate = :lastUpdateDate",
+              "SET #amount = :amount, #description = :description, #categoryId = :categoryId, #transactionDate = :transactionDate, #lastUpdateDate = :lastUpdateDate",
             ExpressionAttributeNames: {
-              "#name": "name",
-              "#icon": "icon",
+              "#amount": "amount",
+              "#description": "description",
+              "#categoryId": "categoryId",
+              "#transactionDate": "transactionDate",
               "#lastUpdateDate": "lastUpdateDate",
             },
             ExpressionAttributeValues: {
-              ":name": "name",
-              ":icon": "icon",
+              ":amount": 1000,
+              ":description": "description",
+              ":categoryId": "categoryId",
+              ":transactionDate": 1678730000,
               ":lastUpdateDate": 1678734965,
             },
             ReturnValues: "ALL_NEW",
@@ -280,22 +297,22 @@ describe("CategoriesRepository", () => {
   });
 
   describe("delete", () => {
-    it("should delete an existing category", async () => {
+    it("should delete an existing transaction", async () => {
       // Arrange
       const dynamoDbClientMock = {
         send: jest.fn(() => Promise.resolve()),
       } as unknown as DynamoDBDocumentClient;
 
-      const repository = new CategoriesRepositoryImplStub({
+      const repository = new TransactionsRepositoryImplStub({
         dynamoDbClient: dynamoDbClientMock,
         config: {
-          categoriesTable: "categoriesTable",
+          transactionsTable: "transactionsTable",
         },
       });
 
       // Act
       const response = await repository.delete(
-        new Category({
+        new Transaction({
           id: "id",
           user: { id: "userId" },
         }),
@@ -305,7 +322,7 @@ describe("CategoriesRepository", () => {
       expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
         expect.objectContaining({
           input: {
-            TableName: "categoriesTable",
+            TableName: "transactionsTable",
             Key: {
               userId: "userId",
               id: "id",

@@ -40,6 +40,10 @@ export class TransactionsValidator {
         data.description ||
         data.category ||
         data.transactionDate,
+      {
+        message:
+          "One of the following is required: amount, description, category or transactionDate",
+      },
     );
 
   static delete = z.object({

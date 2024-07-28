@@ -17,7 +17,10 @@ export class SettingsValidator {
       language: z.nativeEnum(Language).optional(),
       themePreference: z.nativeEnum(Theme).optional(),
     })
-    .refine((data) => data.currency || data.language || data.themePreference);
+    .refine((data) => data.currency || data.language || data.themePreference, {
+      message:
+        "One of the following is required: currency, language or themePreference",
+    });
 }
 
 export type SettingsValidatorMethods = Exclude<

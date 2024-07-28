@@ -1,7 +1,12 @@
 import { DEFAULT_USER_ID } from "../config";
-import { categoriesService, settingsService } from "../services";
+import {
+  categoriesService,
+  settingsService,
+  transactionsService,
+} from "../services";
 import { SettingsController } from "./SettingsController";
 import { CategoriesController } from "./CategoriesController";
+import { TransactionsController } from "./TransactionsController";
 
 export const settingsController = new SettingsController({
   service: settingsService,
@@ -12,6 +17,13 @@ export const settingsController = new SettingsController({
 
 export const categoriesController = new CategoriesController({
   categoriesService,
+  config: {
+    userId: DEFAULT_USER_ID!,
+  },
+});
+
+export const transactionsController = new TransactionsController({
+  transactionsService,
   config: {
     userId: DEFAULT_USER_ID!,
   },

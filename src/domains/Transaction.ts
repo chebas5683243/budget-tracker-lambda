@@ -34,7 +34,7 @@ export class Transaction {
 
   static instanceFor(
     instanceSchema: TransactionsValidatorMethods,
-    data?: Partial<Category>,
+    data?: Partial<Transaction>,
   ) {
     const validation = TransactionsValidator[instanceSchema].safeParse(data);
 
@@ -44,6 +44,6 @@ export class Transaction {
       });
     }
 
-    return new Category(validation.data);
+    return new Transaction(validation.data);
   }
 }

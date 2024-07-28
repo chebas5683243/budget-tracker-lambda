@@ -1,6 +1,10 @@
 import "source-map-support/register";
 import { dispatcher } from "./Dispatcher";
-import { categoriesController, settingsController } from "../controllers";
+import {
+  categoriesController,
+  settingsController,
+  transactionsController,
+} from "../controllers";
 
 dispatcher.get("/", async () => {
   return {
@@ -25,6 +29,20 @@ dispatcher.patch("/categories/{categoryId}", (event) =>
 
 dispatcher.delete("/categories/{categoryId}", (event) =>
   categoriesController.delete(event),
+);
+
+dispatcher.post("/transactions", (event) =>
+  transactionsController.create(event),
+);
+
+dispatcher.get("/transactions", () => transactionsController.findByUserId());
+
+dispatcher.patch("/transactions/{transactionId}", (event) =>
+  transactionsController.update(event),
+);
+
+dispatcher.delete("/transactions/{transactionId}", (event) =>
+  transactionsController.delete(event),
 );
 
 export const lambdaHandler = async (event: any) => dispatcher.handler(event);

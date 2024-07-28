@@ -4,8 +4,8 @@ export class TransactionsMapper {
   static marshalTransaction(transaction: Transaction): Record<string, any> {
     return {
       id: transaction.id,
-      userId: transaction.user.id,
-      categoryId: transaction.category.id,
+      userId: transaction.user?.id,
+      categoryId: transaction.category?.id,
       amount: transaction.amount,
       description: transaction.description,
       transactionDate: transaction.transactionDate,
