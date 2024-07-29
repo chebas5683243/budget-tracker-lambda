@@ -57,6 +57,7 @@ describe("TransactionsRepository", () => {
               creationDate: 1678734965,
             },
             TableName: "transactionsTable",
+            ConditionExpression: "attribute_not_exists(id)",
           },
         }),
       );
@@ -285,6 +286,7 @@ describe("TransactionsRepository", () => {
               ":lastUpdateDate": 1678734965,
             },
             ReturnValues: "ALL_NEW",
+            ConditionExpression: "attribute_exists(id)",
           },
         }),
       );
@@ -337,6 +339,7 @@ describe("TransactionsRepository", () => {
               ":status": "DELETED",
               ":lastUpdateDate": 1678734965,
             },
+            ConditionExpression: "attribute_exists(id)",
           },
         }),
       );

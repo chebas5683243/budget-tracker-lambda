@@ -114,6 +114,7 @@ describe("SettingsRepository", () => {
               ":lastUpdateDate": 1678734965,
             },
             ReturnValues: "ALL_NEW",
+            ConditionExpression: "attribute_exists(id)",
           },
         }),
       );

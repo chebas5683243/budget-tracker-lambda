@@ -17,4 +17,5 @@ export const categoriesService = new CategoriesServiceImpl({
 
 export const transactionsService = new TransactionsServiceImpl({
   transactionsRepo,
+  categoriesRepo,
 });

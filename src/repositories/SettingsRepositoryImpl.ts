@@ -72,6 +72,7 @@ export class SettingsRepositoryImpl
           Key: {
             userId: request.user.id,
           },
+          ConditionExpression: "attribute_exists(id)",
           ReturnValues: "ALL_NEW",
           ...updateExpression,
         }),

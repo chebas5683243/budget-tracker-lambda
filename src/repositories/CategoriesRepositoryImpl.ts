@@ -1,5 +1,6 @@
 import {
   DynamoDBDocumentClient,
+  GetCommand,
   PutCommand,
   QueryCommand,
   UpdateCommand,
@@ -41,6 +42,7 @@ export class CategoriesRepositoryImpl
         new PutCommand({
           Item: request,
           TableName: this.props.config.categoriesTable,
+          ConditionExpression: "attribute_not_exists(id)",
         }),
       );
 
@@ -79,6 +81,29 @@ export class CategoriesRepositoryImpl
     }
   }
 
+  async findById(categoryId: string, userId: string): Promise<Category> {
+    try {
+      const { Item: item } = await this.props.dynamoDbClient.send(
+        new GetCommand({
+          TableName: this.props.config.categoriesTable,
+          Key: {
+            userId,
+            id: categoryId,
+          },
+        }),
+      );
+
+      if (item) return CategoriesMapper.unmarshalCategory(item);
+
+      throw new NotFoundError();
+    } catch (e: any) {
+      if (e instanceof GlobalError) {
+        throw e;
+      }
+      throw new UnknownError({ detail: e.message });
+    }
+  }
+
   async update(category: Category): Promise<Category> {
     try {
       const request = CategoriesMapper.marshalCategory({
@@ -99,6 +124,7 @@ export class CategoriesRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
+          ConditionExpression: "attribute_exists(id)",
           ReturnValues: "ALL_NEW",
           ...updateExpression,
         }),
@@ -133,6 +159,7 @@ export class CategoriesRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
+          ConditionExpression: "attribute_exists(id)",
           ...updateExpression,
         }),
       );

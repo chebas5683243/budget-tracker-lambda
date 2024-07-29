@@ -54,6 +54,7 @@ describe("CategoriesRepository", () => {
               creationDate: 1678734965,
             },
             TableName: "categoriesTable",
+            ConditionExpression: "attribute_not_exists(id)",
           },
         }),
       );
@@ -209,6 +210,62 @@ describe("CategoriesRepository", () => {
     });
   });
 
+  describe("findById", () => {
+    it("should find category by categoryId", async () => {
+      // Arrange
+      const dynamoDbClientMock = {
+        send: jest.fn(() =>
+          Promise.resolve({
+            Item: {
+              id: "id",
+              userId: "userId",
+              icon: "icon",
+              name: "name",
+              status: "ACTIVE",
+              type: "INCOME",
+              creationDate: 1678734965,
+              lastUpdateDate: 1678734965,
+            },
+          }),
+        ),
+      } as unknown as DynamoDBDocumentClient;
+
+      const repository = new CategoriesRepositoryImplStub({
+        dynamoDbClient: dynamoDbClientMock,
+        config: {
+          categoriesTable: "categoriesTable",
+        },
+      });
+
+      // Act
+      const response = await repository.findById("id", "userId");
+
+      // Assert
+      expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          input: {
+            TableName: "categoriesTable",
+            Key: {
+              userId: "userId",
+              id: "id",
+            },
+          },
+        }),
+      );
+
+      expect(response).toEqual({
+        id: "id",
+        user: { id: "userId" },
+        icon: "icon",
+        name: "name",
+        status: "ACTIVE",
+        type: "INCOME",
+        creationDate: 1678734965,
+        lastUpdateDate: 1678734965,
+      });
+    });
+  });
+
   describe("update", () => {
     it("should update category", async () => {
       // Arrange
@@ -268,6 +325,7 @@ describe("CategoriesRepository", () => {
               ":lastUpdateDate": 1678734965,
             },
             ReturnValues: "ALL_NEW",
+            ConditionExpression: "attribute_exists(id)",
           },
         }),
       );
@@ -320,6 +378,7 @@ describe("CategoriesRepository", () => {
               ":status": "DELETED",
               ":lastUpdateDate": 1678734965,
             },
+            ConditionExpression: "attribute_exists(id)",
           },
         }),
       );

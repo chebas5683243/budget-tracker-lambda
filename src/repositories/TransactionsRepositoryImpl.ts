@@ -41,6 +41,7 @@ export class TransactionsRepositoryImpl
         new PutCommand({
           Item: request,
           TableName: this.props.config.transactionsTable,
+          ConditionExpression: "attribute_not_exists(id)",
         }),
       );
 
@@ -104,6 +105,7 @@ export class TransactionsRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
+          ConditionExpression: "attribute_exists(id)",
           ReturnValues: "ALL_NEW",
           ...updateExpression,
         }),
@@ -138,6 +140,7 @@ export class TransactionsRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
+          ConditionExpression: "attribute_exists(id)",
           ...updateExpression,
         }),
       );

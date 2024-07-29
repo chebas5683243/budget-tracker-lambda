@@ -1,6 +1,11 @@
 import { Transaction } from "../../src/domains/Transaction";
+import { BadRequestError } from "../../src/errors/BadRequestError";
+import { CategoriesRepository } from "../../src/repositories/CategoriesRepository";
 import { TransactionsRepository } from "../../src/repositories/TransactionsRepository";
-import { TransactionsServiceImpl } from "../../src/services/TransactionsServiceImpl";
+import {
+  TransactionsServiceImpl,
+  TransactionsServiceProps,
+} from "../../src/services/TransactionsServiceImpl";
 
 describe("TransactionsService", () => {
   describe("create", () => {
@@ -15,8 +20,24 @@ describe("TransactionsService", () => {
         ),
       } as unknown as TransactionsRepository;
 
+      const categoriesRepoMock = {
+        findById: jest.fn(() =>
+          Promise.resolve({
+            id: "id",
+            user: { id: "userId" },
+            icon: "icon",
+            name: "name",
+            status: "ACTIVE",
+            type: "INCOME",
+            creationDate: 1678734965,
+            lastUpdateDate: 1678734965,
+          }),
+        ),
+      } as unknown as CategoriesRepository;
+
       const service = new TransactionsServiceImpl({
         transactionsRepo: transactionsRepoMock,
+        categoriesRepo: categoriesRepoMock,
       });
 
       // Act
@@ -35,6 +56,11 @@ describe("TransactionsService", () => {
       );
 
       // Assert
+      expect(categoriesRepoMock.findById).toHaveBeenCalledWith(
+        "categoryId",
+        "userId",
+      );
+
       expect(transactionsRepoMock.create).toHaveBeenCalledWith({
         user: {
           id: "userId",
@@ -51,6 +77,65 @@ describe("TransactionsService", () => {
         id: "randomId",
         creationDate: 1678734965,
       });
+    });
+
+    it("should not create a transaction if category status is DELETED", async () => {
+      // Arrange
+      const transactionsRepoMock = {
+        create: jest.fn(() =>
+          Promise.resolve({
+            id: "randomId",
+            creationDate: 1678734965,
+          }),
+        ),
+      } as unknown as TransactionsRepository;
+
+      const categoriesRepoMock = {
+        findById: jest.fn(() =>
+          Promise.resolve({
+            id: "id",
+            user: { id: "userId" },
+            icon: "icon",
+            name: "name",
+            status: "DELETED",
+            type: "INCOME",
+            creationDate: 1678734965,
+            lastUpdateDate: 1678734965,
+          }),
+        ),
+      } as unknown as CategoriesRepository;
+
+      const service = new TransactionsServiceImpl({
+        transactionsRepo: transactionsRepoMock,
+        categoriesRepo: categoriesRepoMock,
+      });
+
+      // Act
+      expect(
+        service.create(
+          new Transaction({
+            user: {
+              id: "userId",
+            },
+            category: {
+              id: "categoryId",
+            },
+            amount: 1000,
+            description: "description",
+            transactionDate: 1678730000,
+          }),
+        ),
+      ).rejects.toThrow(
+        new BadRequestError({ message: "Category doesn't exist" }),
+      );
+
+      // Assert
+      expect(categoriesRepoMock.findById).toHaveBeenCalledWith(
+        "categoryId",
+        "userId",
+      );
+
+      expect(transactionsRepoMock.create).not.toHaveBeenCalled();
     });
   });
 
@@ -88,7 +173,7 @@ describe("TransactionsService", () => {
 
       const service = new TransactionsServiceImpl({
         transactionsRepo: transactionsRepoMock,
-      });
+      } as unknown as TransactionsServiceProps);
 
       // Act
       const response = await service.findByUserId(
@@ -139,8 +224,24 @@ describe("TransactionsService", () => {
         ),
       } as unknown as TransactionsRepository;
 
+      const categoriesRepoMock = {
+        findById: jest.fn(() =>
+          Promise.resolve({
+            id: "id",
+            user: { id: "userId" },
+            icon: "icon",
+            name: "name",
+            status: "ACTIVE",
+            type: "INCOME",
+            creationDate: 1678734965,
+            lastUpdateDate: 1678734965,
+          }),
+        ),
+      } as unknown as CategoriesRepository;
+
       const service = new TransactionsServiceImpl({
         transactionsRepo: transactionsRepoMock,
+        categoriesRepo: categoriesRepoMock,
       });
 
       // ACt
@@ -156,6 +257,11 @@ describe("TransactionsService", () => {
       );
 
       // Assert
+      expect(categoriesRepoMock.findById).toHaveBeenCalledWith(
+        "categoryId",
+        "userId",
+      );
+
       expect(transactionsRepoMock.update).toHaveBeenCalledWith({
         id: "id",
         user: { id: "userId" },
@@ -170,6 +276,62 @@ describe("TransactionsService", () => {
         lastUpdateDate: 1678734965,
       });
     });
+
+    it("should not update transaction if new category status is DELETED", async () => {
+      // Arrange
+      const transactionsRepoMock = {
+        update: jest.fn(() =>
+          Promise.resolve({
+            id: "id",
+            lastUpdateDate: 1678734965,
+          }),
+        ),
+      } as unknown as TransactionsRepository;
+
+      const categoriesRepoMock = {
+        findById: jest.fn(() =>
+          Promise.resolve({
+            id: "id",
+            user: { id: "userId" },
+            icon: "icon",
+            name: "name",
+            status: "DELETED",
+            type: "INCOME",
+            creationDate: 1678734965,
+            lastUpdateDate: 1678734965,
+          }),
+        ),
+      } as unknown as CategoriesRepository;
+
+      const service = new TransactionsServiceImpl({
+        transactionsRepo: transactionsRepoMock,
+        categoriesRepo: categoriesRepoMock,
+      });
+
+      // At
+      expect(
+        service.update(
+          new Transaction({
+            id: "id",
+            user: { id: "userId" },
+            category: { id: "categoryId" },
+            amount: 1000,
+            description: "description",
+            transactionDate: 1678730000,
+          }),
+        ),
+      ).rejects.toThrow(
+        new BadRequestError({ message: "Category doesn't exist" }),
+      );
+
+      // Assert
+      expect(categoriesRepoMock.findById).toHaveBeenCalledWith(
+        "categoryId",
+        "userId",
+      );
+
+      expect(transactionsRepoMock.update).not.toHaveBeenCalled();
+    });
   });
 
   describe("delete", () => {
@@ -181,7 +343,7 @@ describe("TransactionsService", () => {
 
       const service = new TransactionsServiceImpl({
         transactionsRepo: transactionsRepoMock,
-      });
+      } as unknown as TransactionsServiceProps);
 
       // Act
       const response = await service.delete(
