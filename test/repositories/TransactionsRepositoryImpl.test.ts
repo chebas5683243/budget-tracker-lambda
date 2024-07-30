@@ -286,7 +286,7 @@ describe("TransactionsRepository", () => {
               ":lastUpdateDate": 1678734965,
             },
             ReturnValues: "ALL_NEW",
-            ConditionExpression: "attribute_exists(id)",
+            ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
           },
         }),
       );
@@ -339,7 +339,7 @@ describe("TransactionsRepository", () => {
               ":status": "DELETED",
               ":lastUpdateDate": 1678734965,
             },
-            ConditionExpression: "attribute_exists(id)",
+            ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
           },
         }),
       );

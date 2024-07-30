@@ -4,6 +4,7 @@ import {
   QueryCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { AbstractDynamoDbRepository } from "./AbstractDynamoDbRepository";
 import { TransactionsRepository } from "./TransactionsRepository";
 import { Transaction } from "../domains/Transaction";
@@ -105,7 +106,7 @@ export class TransactionsRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
-          ConditionExpression: "attribute_exists(id)",
+          ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
           ReturnValues: "ALL_NEW",
           ...updateExpression,
         }),
@@ -116,6 +117,9 @@ export class TransactionsRepositoryImpl
         lastUpdateDate: updatedItem?.lastUpdateDate,
       });
     } catch (e: any) {
+      if (e instanceof ConditionalCheckFailedException) {
+        throw new NotFoundError();
+      }
       throw new UnknownError({ detail: e.message });
     }
   }
@@ -140,11 +144,14 @@ export class TransactionsRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
-          ConditionExpression: "attribute_exists(id)",
+          ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
           ...updateExpression,
         }),
       );
     } catch (e: any) {
+      if (e instanceof ConditionalCheckFailedException) {
+        throw new NotFoundError();
+      }
       throw new UnknownError({ detail: e.message });
     }
   }

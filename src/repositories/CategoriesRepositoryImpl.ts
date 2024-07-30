@@ -5,6 +5,7 @@ import {
   QueryCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { Category } from "../domains/Category";
 import { AbstractDynamoDbRepository } from "./AbstractDynamoDbRepository";
 import { CategoriesRepository } from "./CategoriesRepository";
@@ -124,7 +125,7 @@ export class CategoriesRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
-          ConditionExpression: "attribute_exists(id)",
+          ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
           ReturnValues: "ALL_NEW",
           ...updateExpression,
         }),
@@ -135,6 +136,9 @@ export class CategoriesRepositoryImpl
         lastUpdateDate: updatedItem?.lastUpdateDate,
       });
     } catch (e: any) {
+      if (e instanceof ConditionalCheckFailedException) {
+        throw new NotFoundError();
+      }
       throw new UnknownError({ detail: e.message });
     }
   }
@@ -159,11 +163,14 @@ export class CategoriesRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
-          ConditionExpression: "attribute_exists(id)",
+          ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
           ...updateExpression,
         }),
       );
     } catch (e: any) {
+      if (e instanceof ConditionalCheckFailedException) {
+        throw new NotFoundError();
+      }
       throw new UnknownError({ detail: e.message });
     }
   }
