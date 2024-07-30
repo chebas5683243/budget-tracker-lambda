@@ -327,7 +327,7 @@ describe("CategoriesRepository", () => {
             },
             ReturnValues: "ALL_NEW",
             ConditionExpression:
-              "attribute_exists(id) AND status = :activeStatus",
+              "attribute_exists(id) AND #status = :activeStatus",
           },
         }),
       );
@@ -382,7 +382,7 @@ describe("CategoriesRepository", () => {
               ":activeStatus": "ACTIVE",
             },
             ConditionExpression:
-              "attribute_exists(id) AND status = :activeStatus",
+              "attribute_exists(id) AND #status = :activeStatus",
           },
         }),
       );
