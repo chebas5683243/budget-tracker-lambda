@@ -126,7 +126,7 @@ export class CategoriesRepositoryImpl
             id: request.id,
           },
           ConditionExpression:
-            "attribute_exists(id) AND status = :activeStatus",
+            "attribute_exists(id) AND #status = :activeStatus",
           ReturnValues: "ALL_NEW",
           ...updateExpression,
           ExpressionAttributeValues: {
@@ -169,7 +169,7 @@ export class CategoriesRepositoryImpl
             id: request.id,
           },
           ConditionExpression:
-            "attribute_exists(id) AND status = :activeStatus",
+            "attribute_exists(id) AND #status = :activeStatus",
           ...updateExpression,
           ExpressionAttributeValues: {
             ...updateExpression?.ExpressionAttributeValues,
