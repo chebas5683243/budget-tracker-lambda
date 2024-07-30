@@ -325,7 +325,7 @@ describe("CategoriesRepository", () => {
               ":lastUpdateDate": 1678734965,
             },
             ReturnValues: "ALL_NEW",
-            ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
+            ConditionExpression: "attribute_exists(id) AND status = 'ACTIVE'",
           },
         }),
       );
@@ -378,7 +378,7 @@ describe("CategoriesRepository", () => {
               ":status": "DELETED",
               ":lastUpdateDate": 1678734965,
             },
-            ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
+            ConditionExpression: "attribute_exists(id) AND status = 'ACTIVE'",
           },
         }),
       );

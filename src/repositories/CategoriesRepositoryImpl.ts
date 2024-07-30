@@ -125,7 +125,7 @@ export class CategoriesRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
-          ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
+          ConditionExpression: "attribute_exists(id) AND status = 'ACTIVE'",
           ReturnValues: "ALL_NEW",
           ...updateExpression,
         }),
@@ -163,7 +163,7 @@ export class CategoriesRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
-          ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
+          ConditionExpression: "attribute_exists(id) AND status = 'ACTIVE'",
           ...updateExpression,
         }),
       );
