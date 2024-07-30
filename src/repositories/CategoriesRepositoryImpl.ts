@@ -125,9 +125,14 @@ export class CategoriesRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
-          ConditionExpression: "attribute_exists(id) AND status = 'ACTIVE'",
+          ConditionExpression:
+            "attribute_exists(id) AND status = :activeStatus",
           ReturnValues: "ALL_NEW",
           ...updateExpression,
+          ExpressionAttributeValues: {
+            ...updateExpression?.ExpressionAttributeValues,
+            ":activeStatus": CategoryStatus.ACTIVE,
+          },
         }),
       );
 
@@ -163,8 +168,13 @@ export class CategoriesRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
-          ConditionExpression: "attribute_exists(id) AND status = 'ACTIVE'",
+          ConditionExpression:
+            "attribute_exists(id) AND status = :activeStatus",
           ...updateExpression,
+          ExpressionAttributeValues: {
+            ...updateExpression?.ExpressionAttributeValues,
+            ":activeStatus": CategoryStatus.ACTIVE,
+          },
         }),
       );
     } catch (e: any) {

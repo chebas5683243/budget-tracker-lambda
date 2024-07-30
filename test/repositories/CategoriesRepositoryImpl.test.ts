@@ -323,9 +323,11 @@ describe("CategoriesRepository", () => {
               ":name": "name",
               ":icon": "icon",
               ":lastUpdateDate": 1678734965,
+              ":activeStatus": "ACTIVE",
             },
             ReturnValues: "ALL_NEW",
-            ConditionExpression: "attribute_exists(id) AND status = 'ACTIVE'",
+            ConditionExpression:
+              "attribute_exists(id) AND status = :activeStatus",
           },
         }),
       );
@@ -377,8 +379,10 @@ describe("CategoriesRepository", () => {
             ExpressionAttributeValues: {
               ":status": "DELETED",
               ":lastUpdateDate": 1678734965,
+              ":activeStatus": "ACTIVE",
             },
-            ConditionExpression: "attribute_exists(id) AND status = 'ACTIVE'",
+            ConditionExpression:
+              "attribute_exists(id) AND status = :activeStatus",
           },
         }),
       );
