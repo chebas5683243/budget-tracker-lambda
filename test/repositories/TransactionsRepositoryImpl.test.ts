@@ -277,6 +277,7 @@ describe("TransactionsRepository", () => {
               "#categoryId": "categoryId",
               "#transactionDate": "transactionDate",
               "#lastUpdateDate": "lastUpdateDate",
+              "#status": "status",
             },
             ExpressionAttributeValues: {
               ":amount": 1000,
@@ -284,9 +285,11 @@ describe("TransactionsRepository", () => {
               ":categoryId": "categoryId",
               ":transactionDate": 1678730000,
               ":lastUpdateDate": 1678734965,
+              ":activeStatus": "ACTIVE",
             },
             ReturnValues: "ALL_NEW",
-            ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
+            ConditionExpression:
+              "attribute_exists(id) AND #status = :activeStatus",
           },
         }),
       );
@@ -338,8 +341,10 @@ describe("TransactionsRepository", () => {
             ExpressionAttributeValues: {
               ":status": "DELETED",
               ":lastUpdateDate": 1678734965,
+              ":activeStatus": "ACTIVE",
             },
-            ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
+            ConditionExpression:
+              "attribute_exists(id) AND #status = :activeStatus",
           },
         }),
       );

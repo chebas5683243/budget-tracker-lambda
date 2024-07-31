@@ -318,6 +318,7 @@ describe("CategoriesRepository", () => {
               "#name": "name",
               "#icon": "icon",
               "#lastUpdateDate": "lastUpdateDate",
+              "#status": "status",
             },
             ExpressionAttributeValues: {
               ":name": "name",

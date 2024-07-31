@@ -106,9 +106,18 @@ export class TransactionsRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
-          ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
+          ConditionExpression:
+            "attribute_exists(id) AND #status = :activeStatus",
           ReturnValues: "ALL_NEW",
-          ...updateExpression,
+          UpdateExpression: updateExpression?.UpdateExpression,
+          ExpressionAttributeNames: {
+            ...updateExpression?.ExpressionAttributeNames,
+            "#status": "status",
+          },
+          ExpressionAttributeValues: {
+            ...updateExpression?.ExpressionAttributeValues,
+            ":activeStatus": TransactionStatus.ACTIVE,
+          },
         }),
       );
 
@@ -144,8 +153,13 @@ export class TransactionsRepositoryImpl
             userId: request.userId,
             id: request.id,
           },
-          ConditionExpression: "attribute_exists(id) AND status = ACTIVE",
+          ConditionExpression:
+            "attribute_exists(id) AND #status = :activeStatus",
           ...updateExpression,
+          ExpressionAttributeValues: {
+            ...updateExpression?.ExpressionAttributeValues,
+            ":activeStatus": TransactionStatus.ACTIVE,
+          },
         }),
       );
     } catch (e: any) {

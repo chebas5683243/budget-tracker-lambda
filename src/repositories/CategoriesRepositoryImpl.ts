@@ -128,7 +128,11 @@ export class CategoriesRepositoryImpl
           ConditionExpression:
             "attribute_exists(id) AND #status = :activeStatus",
           ReturnValues: "ALL_NEW",
-          ...updateExpression,
+          UpdateExpression: updateExpression?.UpdateExpression,
+          ExpressionAttributeNames: {
+            ...updateExpression?.ExpressionAttributeNames,
+            "#status": "status",
+          },
           ExpressionAttributeValues: {
             ...updateExpression?.ExpressionAttributeValues,
             ":activeStatus": CategoryStatus.ACTIVE,
