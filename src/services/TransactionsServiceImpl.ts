@@ -31,7 +31,9 @@ export class TransactionsServiceImpl implements TransactionsService {
   }
 
   async update(transaction: Transaction): Promise<Transaction> {
-    await this.validateCategory(transaction);
+    if (transaction.category) {
+      await this.validateCategory(transaction);
+    }
 
     const updateTransaction =
       await this.props.transactionsRepo.update(transaction);

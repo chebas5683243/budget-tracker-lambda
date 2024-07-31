@@ -277,6 +277,54 @@ describe("TransactionsService", () => {
       });
     });
 
+    it("should update transaction without categoryId", async () => {
+      // Arrange
+      const transactionsRepoMock = {
+        update: jest.fn(() =>
+          Promise.resolve({
+            id: "id",
+            lastUpdateDate: 1678734965,
+          }),
+        ),
+      } as unknown as TransactionsRepository;
+
+      const categoriesRepoMock = {
+        findById: jest.fn(),
+      } as unknown as CategoriesRepository;
+
+      const service = new TransactionsServiceImpl({
+        transactionsRepo: transactionsRepoMock,
+        categoriesRepo: categoriesRepoMock,
+      });
+
+      // ACt
+      const response = await service.update(
+        new Transaction({
+          id: "id",
+          user: { id: "userId" },
+          amount: 1000,
+          description: "description",
+          transactionDate: 1678730000,
+        }),
+      );
+
+      // Assert
+      expect(categoriesRepoMock.findById).not.toHaveBeenCalled();
+
+      expect(transactionsRepoMock.update).toHaveBeenCalledWith({
+        id: "id",
+        user: { id: "userId" },
+        amount: 1000,
+        description: "description",
+        transactionDate: 1678730000,
+      });
+
+      expect(response).toEqual({
+        id: "id",
+        lastUpdateDate: 1678734965,
+      });
+    });
+
     it("should not update transaction if new category status is DELETED", async () => {
       // Arrange
       const transactionsRepoMock = {
