@@ -12,7 +12,7 @@ describe("TransactionsController", () => {
         create: jest.fn(() =>
           Promise.resolve({
             id: "randomId",
-            creationDate: 1678734965,
+            creationDate: 1678734965000,
           }),
         ),
       } as unknown as TransactionsService;
@@ -32,7 +32,7 @@ describe("TransactionsController", () => {
           },
           amount: 1000,
           description: "description",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
         }),
       } as unknown as lambda.APIGatewayEvent);
 
@@ -44,7 +44,7 @@ describe("TransactionsController", () => {
         },
         amount: 1000,
         description: "description",
-        transactionDate: 1678730000,
+        transactionDate: 1678730000000,
       });
 
       expect(response).toEqual(
@@ -52,7 +52,7 @@ describe("TransactionsController", () => {
           statusCode: 201,
           body: JSON.stringify({
             id: "randomId",
-            creationDate: 1678734965,
+            creationDate: 1678734965000,
           }),
         }),
       );
@@ -72,8 +72,8 @@ describe("TransactionsController", () => {
               name: "name-1",
               status: "ACTIVE",
               type: "INCOME",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
             {
               id: "id-2",
@@ -82,8 +82,8 @@ describe("TransactionsController", () => {
               name: "name-2",
               status: "ACTIVE",
               type: "EXPENSE",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
           ]),
         ),
@@ -115,8 +115,8 @@ describe("TransactionsController", () => {
               name: "name-1",
               status: "ACTIVE",
               type: "INCOME",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
             {
               id: "id-2",
@@ -125,8 +125,8 @@ describe("TransactionsController", () => {
               name: "name-2",
               status: "ACTIVE",
               type: "EXPENSE",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
           ]),
         }),
@@ -141,7 +141,7 @@ describe("TransactionsController", () => {
         update: jest.fn(() =>
           Promise.resolve({
             id: "id",
-            lastUpdateDate: 1678734965,
+            lastUpdateDate: 1678734965000,
           }),
         ),
       } as unknown as TransactionsService;
@@ -162,7 +162,7 @@ describe("TransactionsController", () => {
           },
           amount: 1000,
           description: "description",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
         }),
       } as unknown as lambda.APIGatewayEvent);
 
@@ -175,7 +175,7 @@ describe("TransactionsController", () => {
         },
         amount: 1000,
         description: "description",
-        transactionDate: 1678730000,
+        transactionDate: 1678730000000,
       });
 
       expect(response).toEqual(
@@ -183,7 +183,7 @@ describe("TransactionsController", () => {
           statusCode: 200,
           body: JSON.stringify({
             id: "id",
-            lastUpdateDate: 1678734965,
+            lastUpdateDate: 1678734965000,
           }),
         }),
       );
@@ -219,6 +219,37 @@ describe("TransactionsController", () => {
         expect.objectContaining({
           statusCode: 204,
           body: "",
+        }),
+      );
+    });
+  });
+
+  describe("getTransactionsPeriods", () => {
+    it("should return all user transactions", async () => {
+      // Arrange
+      const transactionsServiceMock = {
+        findByUserId: jest.fn(() => Promise.resolve([2023, 2024])),
+      } as unknown as TransactionsService;
+
+      const controller = new TransactionsController({
+        transactionsService: transactionsServiceMock,
+        config: {
+          userId: "userId",
+        },
+      });
+
+      // Act
+      const response = await controller.findByUserId();
+
+      // Assert
+      expect(transactionsServiceMock.findByUserId).toHaveBeenCalledWith({
+        user: { id: "userId" },
+      });
+
+      expect(response).toEqual(
+        expect.objectContaining({
+          statusCode: 200,
+          body: JSON.stringify([2023, 2024]),
         }),
       );
     });

@@ -12,7 +12,7 @@ describe("CategoriesController", () => {
         create: jest.fn(() =>
           Promise.resolve({
             id: "randomId",
-            creationDate: 1678734965,
+            creationDate: 1678734965000,
           }),
         ),
       } as unknown as CategoriesService;
@@ -46,7 +46,7 @@ describe("CategoriesController", () => {
           statusCode: 201,
           body: JSON.stringify({
             id: "randomId",
-            creationDate: 1678734965,
+            creationDate: 1678734965000,
           }),
         }),
       );
@@ -66,8 +66,8 @@ describe("CategoriesController", () => {
               name: "name-1",
               status: "ACTIVE",
               type: "INCOME",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
             {
               id: "id-2",
@@ -76,8 +76,8 @@ describe("CategoriesController", () => {
               name: "name-2",
               status: "ACTIVE",
               type: "EXPENSE",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
           ]),
         ),
@@ -109,8 +109,8 @@ describe("CategoriesController", () => {
               name: "name-1",
               status: "ACTIVE",
               type: "INCOME",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
             {
               id: "id-2",
@@ -119,8 +119,8 @@ describe("CategoriesController", () => {
               name: "name-2",
               status: "ACTIVE",
               type: "EXPENSE",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
           ]),
         }),
@@ -135,7 +135,7 @@ describe("CategoriesController", () => {
         update: jest.fn(() =>
           Promise.resolve({
             id: "id",
-            lastUpdateDate: 1678734965,
+            lastUpdateDate: 1678734965000,
           }),
         ),
       } as unknown as CategoriesService;
@@ -169,7 +169,7 @@ describe("CategoriesController", () => {
           statusCode: 200,
           body: JSON.stringify({
             id: "id",
-            lastUpdateDate: 1678734965,
+            lastUpdateDate: 1678734965000,
           }),
         }),
       );

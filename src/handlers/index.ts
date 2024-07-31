@@ -45,4 +45,8 @@ dispatcher.delete("/transactions/{transactionId}", (event) =>
   transactionsController.delete(event),
 );
 
+dispatcher.get("/reports/history-periods", () =>
+  transactionsController.getTransactionsPeriods(),
+);
+
 export const lambdaHandler = async (event: any) => dispatcher.handler(event);

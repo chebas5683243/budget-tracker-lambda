@@ -56,7 +56,7 @@ describe("SettingsService", () => {
         update: jest.fn(() =>
           Promise.resolve({
             id: "id",
-            lastUpdateDate: 1678734965,
+            lastUpdateDate: 1678734965000,
           }),
         ),
       } as unknown as SettingsRepository;
@@ -87,7 +87,7 @@ describe("SettingsService", () => {
 
       expect(response).toEqual({
         id: "id",
-        lastUpdateDate: 1678734965,
+        lastUpdateDate: 1678734965000,
       });
     });
   });

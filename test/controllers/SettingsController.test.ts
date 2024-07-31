@@ -61,7 +61,7 @@ describe("SettingsController", () => {
         update: jest.fn(() =>
           Promise.resolve({
             id: "id",
-            lastUpdateDone: 1678734965,
+            lastUpdateDone: 1678734965000,
           }),
         ),
       } as unknown as SettingsService;
@@ -98,7 +98,7 @@ describe("SettingsController", () => {
           statusCode: 200,
           body: JSON.stringify({
             id: "id",
-            lastUpdateDone: 1678734965,
+            lastUpdateDone: 1678734965000,
           }),
         }),
       );

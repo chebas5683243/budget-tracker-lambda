@@ -5,7 +5,7 @@ import { Currency, Language, Theme } from "../../src/types/Setting";
 
 class SettingsRepositoryImplStub extends SettingsRepositoryImpl {
   public getTimestamp(): number {
-    return 1678734965;
+    return 1678734965000;
   }
 
   public getUUID(): any {
@@ -25,7 +25,7 @@ describe("SettingsRepository", () => {
             language: "language",
             themePreference: "themePreference",
             userId: "userId",
-            lastUpdateDate: 1678734970,
+            lastUpdateDate: 1678734970000,
           },
         }),
       } as unknown as DynamoDBClient;
@@ -58,7 +58,7 @@ describe("SettingsRepository", () => {
         user: {
           id: "userId",
         },
-        lastUpdateDate: 1678734970,
+        lastUpdateDate: 1678734970000,
       });
     });
   });
@@ -69,7 +69,7 @@ describe("SettingsRepository", () => {
       const dynamoClientMock = {
         send: jest.fn(() =>
           Promise.resolve({
-            Attributes: { id: "id", lastUpdateDate: 1678734965 },
+            Attributes: { id: "id", lastUpdateDate: 1678734965000 },
           }),
         ),
       } as unknown as DynamoDBClient;
@@ -111,7 +111,7 @@ describe("SettingsRepository", () => {
               ":currency": "PEN",
               ":language": "SPANISH",
               ":themePreference": "DARK",
-              ":lastUpdateDate": 1678734965,
+              ":lastUpdateDate": 1678734965000,
             },
             ReturnValues: "ALL_NEW",
             ConditionExpression: "attribute_exists(id)",
@@ -121,7 +121,7 @@ describe("SettingsRepository", () => {
 
       expect(response).toEqual({
         id: "id",
-        lastUpdateDate: 1678734965,
+        lastUpdateDate: 1678734965000,
       });
     });
   });

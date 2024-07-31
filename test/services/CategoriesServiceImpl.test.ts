@@ -11,7 +11,7 @@ describe("CategoriesService", () => {
         create: jest.fn(() =>
           Promise.resolve({
             id: "randomId",
-            creationDate: 1678734965,
+            creationDate: 1678734965000,
           }),
         ),
       } as unknown as CategoriesRepository;
@@ -44,7 +44,7 @@ describe("CategoriesService", () => {
 
       expect(response).toEqual({
         id: "randomId",
-        creationDate: 1678734965,
+        creationDate: 1678734965000,
       });
     });
   });
@@ -62,8 +62,8 @@ describe("CategoriesService", () => {
               name: "name-1",
               status: "ACTIVE",
               type: "INCOME",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
             {
               id: "id-2",
@@ -72,8 +72,8 @@ describe("CategoriesService", () => {
               name: "name-2",
               status: "ACTIVE",
               type: "EXPENSE",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
           ]),
         ),
@@ -101,8 +101,8 @@ describe("CategoriesService", () => {
           name: "name-1",
           status: "ACTIVE",
           type: "INCOME",
-          creationDate: 1678734965,
-          lastUpdateDate: 1678734965,
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
         },
         {
           id: "id-2",
@@ -111,8 +111,8 @@ describe("CategoriesService", () => {
           name: "name-2",
           status: "ACTIVE",
           type: "EXPENSE",
-          creationDate: 1678734965,
-          lastUpdateDate: 1678734965,
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
         },
       ]);
     });
@@ -125,7 +125,7 @@ describe("CategoriesService", () => {
         update: jest.fn(() =>
           Promise.resolve({
             id: "id",
-            lastUpdateDate: 1678734965,
+            lastUpdateDate: 1678734965000,
           }),
         ),
       } as unknown as CategoriesRepository;
@@ -154,7 +154,7 @@ describe("CategoriesService", () => {
 
       expect(response).toEqual({
         id: "id",
-        lastUpdateDate: 1678734965,
+        lastUpdateDate: 1678734965000,
       });
     });
   });

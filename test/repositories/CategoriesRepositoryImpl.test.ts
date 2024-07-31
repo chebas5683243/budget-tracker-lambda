@@ -5,7 +5,7 @@ import { CategoryType } from "../../src/types/Category";
 
 class CategoriesRepositoryImplStub extends CategoriesRepositoryImpl {
   public getTimestamp(): number {
-    return 1678734965;
+    return 1678734965000;
   }
 
   public getUUID(): any {
@@ -51,7 +51,7 @@ describe("CategoriesRepository", () => {
               status: "ACTIVE",
               type: "INCOME",
               userId: "userId",
-              creationDate: 1678734965,
+              creationDate: 1678734965000,
             },
             TableName: "categoriesTable",
             ConditionExpression: "attribute_not_exists(id)",
@@ -61,7 +61,7 @@ describe("CategoriesRepository", () => {
 
       expect(response).toEqual({
         id: "randomId",
-        creationDate: 1678734965,
+        creationDate: 1678734965000,
       });
     });
   });
@@ -80,8 +80,8 @@ describe("CategoriesRepository", () => {
                 name: "name-1",
                 status: "ACTIVE",
                 type: "INCOME",
-                creationDate: 1678734965,
-                lastUpdateDate: 1678734965,
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
               },
               {
                 id: "id-2",
@@ -90,8 +90,8 @@ describe("CategoriesRepository", () => {
                 name: "name-2",
                 status: "ACTIVE",
                 type: "EXPENSE",
-                creationDate: 1678734965,
-                lastUpdateDate: 1678734965,
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
               },
             ],
           }),
@@ -127,8 +127,8 @@ describe("CategoriesRepository", () => {
           name: "name-1",
           status: "ACTIVE",
           type: "INCOME",
-          creationDate: 1678734965,
-          lastUpdateDate: 1678734965,
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
         },
         {
           id: "id-2",
@@ -137,8 +137,8 @@ describe("CategoriesRepository", () => {
           name: "name-2",
           status: "ACTIVE",
           type: "EXPENSE",
-          creationDate: 1678734965,
-          lastUpdateDate: 1678734965,
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
         },
       ]);
     });
@@ -156,8 +156,8 @@ describe("CategoriesRepository", () => {
                 name: "name-1",
                 status: "ACTIVE",
                 type: "INCOME",
-                creationDate: 1678734965,
-                lastUpdateDate: 1678734965,
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
               },
               {
                 id: "id-2",
@@ -166,8 +166,8 @@ describe("CategoriesRepository", () => {
                 name: "name-2",
                 status: "DELETED",
                 type: "EXPENSE",
-                creationDate: 1678734965,
-                lastUpdateDate: 1678734965,
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
               },
             ],
           }),
@@ -203,8 +203,8 @@ describe("CategoriesRepository", () => {
           name: "name-1",
           status: "ACTIVE",
           type: "INCOME",
-          creationDate: 1678734965,
-          lastUpdateDate: 1678734965,
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
         },
       ]);
     });
@@ -223,8 +223,8 @@ describe("CategoriesRepository", () => {
               name: "name",
               status: "ACTIVE",
               type: "INCOME",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
           }),
         ),
@@ -260,8 +260,8 @@ describe("CategoriesRepository", () => {
         name: "name",
         status: "ACTIVE",
         type: "INCOME",
-        creationDate: 1678734965,
-        lastUpdateDate: 1678734965,
+        creationDate: 1678734965000,
+        lastUpdateDate: 1678734965000,
       });
     });
   });
@@ -279,8 +279,8 @@ describe("CategoriesRepository", () => {
               name: "name",
               status: "ACTIVE",
               type: "INCOME",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
           }),
         ),
@@ -323,7 +323,7 @@ describe("CategoriesRepository", () => {
             ExpressionAttributeValues: {
               ":name": "name",
               ":icon": "icon",
-              ":lastUpdateDate": 1678734965,
+              ":lastUpdateDate": 1678734965000,
               ":activeStatus": "ACTIVE",
             },
             ReturnValues: "ALL_NEW",
@@ -335,7 +335,7 @@ describe("CategoriesRepository", () => {
 
       expect(response).toEqual({
         id: "id",
-        lastUpdateDate: 1678734965,
+        lastUpdateDate: 1678734965000,
       });
     });
   });
@@ -379,7 +379,7 @@ describe("CategoriesRepository", () => {
             },
             ExpressionAttributeValues: {
               ":status": "DELETED",
-              ":lastUpdateDate": 1678734965,
+              ":lastUpdateDate": 1678734965000,
               ":activeStatus": "ACTIVE",
             },
             ConditionExpression:

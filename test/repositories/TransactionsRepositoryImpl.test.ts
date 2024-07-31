@@ -4,7 +4,7 @@ import { Transaction } from "../../src/domains/Transaction";
 
 class TransactionsRepositoryImplStub extends TransactionsRepositoryImpl {
   public getTimestamp(): number {
-    return 1678734965;
+    return 1678734965000;
   }
 
   public getUUID(): any {
@@ -38,7 +38,7 @@ describe("TransactionsRepository", () => {
           },
           amount: 1000,
           description: "description",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
         }),
       );
 
@@ -52,9 +52,9 @@ describe("TransactionsRepository", () => {
               categoryId: "categoryId",
               amount: 1000,
               description: "description",
-              transactionDate: 1678730000,
+              transactionDate: 1678730000000,
               status: "ACTIVE",
-              creationDate: 1678734965,
+              creationDate: 1678734965000,
             },
             TableName: "transactionsTable",
             ConditionExpression: "attribute_not_exists(id)",
@@ -64,7 +64,7 @@ describe("TransactionsRepository", () => {
 
       expect(response).toEqual({
         id: "randomId",
-        creationDate: 1678734965,
+        creationDate: 1678734965000,
       });
     });
   });
@@ -82,10 +82,10 @@ describe("TransactionsRepository", () => {
                 categoryId: "categoryId-1",
                 amount: 1000,
                 description: "description-1",
-                transactionDate: 1678730000,
+                transactionDate: 1678730000000,
                 status: "ACTIVE",
-                creationDate: 1678734965,
-                lastUpdateDate: 1678734965,
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
               },
               {
                 id: "id-2",
@@ -93,10 +93,10 @@ describe("TransactionsRepository", () => {
                 categoryId: "categoryId-2",
                 amount: 1000,
                 description: "description-2",
-                transactionDate: 1678730000,
+                transactionDate: 1678730000000,
                 status: "ACTIVE",
-                creationDate: 1678734965,
-                lastUpdateDate: 1678734965,
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
               },
             ],
           }),
@@ -131,10 +131,10 @@ describe("TransactionsRepository", () => {
           category: { id: "categoryId-1" },
           amount: 1000,
           description: "description-1",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
           status: "ACTIVE",
-          creationDate: 1678734965,
-          lastUpdateDate: 1678734965,
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
         },
         {
           id: "id-2",
@@ -142,10 +142,10 @@ describe("TransactionsRepository", () => {
           category: { id: "categoryId-2" },
           amount: 1000,
           description: "description-2",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
           status: "ACTIVE",
-          creationDate: 1678734965,
-          lastUpdateDate: 1678734965,
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
         },
       ]);
     });
@@ -162,10 +162,10 @@ describe("TransactionsRepository", () => {
                 categoryId: "categoryId-1",
                 amount: 1000,
                 description: "description-1",
-                transactionDate: 1678730000,
+                transactionDate: 1678730000000,
                 status: "ACTIVE",
-                creationDate: 1678734965,
-                lastUpdateDate: 1678734965,
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
               },
               {
                 id: "id-2",
@@ -173,10 +173,10 @@ describe("TransactionsRepository", () => {
                 categoryId: "categoryId-2",
                 amount: 1000,
                 description: "description-2",
-                transactionDate: 1678730000,
+                transactionDate: 1678730000000,
                 status: "DELETED",
-                creationDate: 1678734965,
-                lastUpdateDate: 1678734965,
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
               },
             ],
           }),
@@ -211,10 +211,10 @@ describe("TransactionsRepository", () => {
           category: { id: "categoryId-1" },
           amount: 1000,
           description: "description-1",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
           status: "ACTIVE",
-          creationDate: 1678734965,
-          lastUpdateDate: 1678734965,
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
         },
       ]);
     });
@@ -232,10 +232,10 @@ describe("TransactionsRepository", () => {
               categoryId: "categoryId",
               amount: 1000,
               description: "description",
-              transactionDate: 1678730000,
+              transactionDate: 1678730000000,
               status: "ACTIVE",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
           }),
         ),
@@ -256,7 +256,7 @@ describe("TransactionsRepository", () => {
           category: { id: "categoryId" },
           amount: 1000,
           description: "description",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
         }),
       );
 
@@ -283,8 +283,8 @@ describe("TransactionsRepository", () => {
               ":amount": 1000,
               ":description": "description",
               ":categoryId": "categoryId",
-              ":transactionDate": 1678730000,
-              ":lastUpdateDate": 1678734965,
+              ":transactionDate": 1678730000000,
+              ":lastUpdateDate": 1678734965000,
               ":activeStatus": "ACTIVE",
             },
             ReturnValues: "ALL_NEW",
@@ -296,7 +296,7 @@ describe("TransactionsRepository", () => {
 
       expect(response).toEqual({
         id: "id",
-        lastUpdateDate: 1678734965,
+        lastUpdateDate: 1678734965000,
       });
     });
   });
@@ -340,7 +340,7 @@ describe("TransactionsRepository", () => {
             },
             ExpressionAttributeValues: {
               ":status": "DELETED",
-              ":lastUpdateDate": 1678734965,
+              ":lastUpdateDate": 1678734965000,
               ":activeStatus": "ACTIVE",
             },
             ConditionExpression:

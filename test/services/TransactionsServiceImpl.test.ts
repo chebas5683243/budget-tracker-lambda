@@ -15,7 +15,7 @@ describe("TransactionsService", () => {
         create: jest.fn(() =>
           Promise.resolve({
             id: "randomId",
-            creationDate: 1678734965,
+            creationDate: 1678734965000,
           }),
         ),
       } as unknown as TransactionsRepository;
@@ -29,8 +29,8 @@ describe("TransactionsService", () => {
             name: "name",
             status: "ACTIVE",
             type: "INCOME",
-            creationDate: 1678734965,
-            lastUpdateDate: 1678734965,
+            creationDate: 1678734965000,
+            lastUpdateDate: 1678734965000,
           }),
         ),
       } as unknown as CategoriesRepository;
@@ -51,7 +51,7 @@ describe("TransactionsService", () => {
           },
           amount: 1000,
           description: "description",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
         }),
       );
 
@@ -70,12 +70,12 @@ describe("TransactionsService", () => {
         },
         amount: 1000,
         description: "description",
-        transactionDate: 1678730000,
+        transactionDate: 1678730000000,
       });
 
       expect(response).toEqual({
         id: "randomId",
-        creationDate: 1678734965,
+        creationDate: 1678734965000,
       });
     });
 
@@ -85,7 +85,7 @@ describe("TransactionsService", () => {
         create: jest.fn(() =>
           Promise.resolve({
             id: "randomId",
-            creationDate: 1678734965,
+            creationDate: 1678734965000,
           }),
         ),
       } as unknown as TransactionsRepository;
@@ -99,8 +99,8 @@ describe("TransactionsService", () => {
             name: "name",
             status: "DELETED",
             type: "INCOME",
-            creationDate: 1678734965,
-            lastUpdateDate: 1678734965,
+            creationDate: 1678734965000,
+            lastUpdateDate: 1678734965000,
           }),
         ),
       } as unknown as CategoriesRepository;
@@ -122,7 +122,7 @@ describe("TransactionsService", () => {
             },
             amount: 1000,
             description: "description",
-            transactionDate: 1678730000,
+            transactionDate: 1678730000000,
           }),
         ),
       ).rejects.toThrow(
@@ -151,10 +151,10 @@ describe("TransactionsService", () => {
               category: { id: "categoryId-1" },
               amount: 1000,
               description: "description-1",
-              transactionDate: 1678730000,
+              transactionDate: 1678730000000,
               status: "ACTIVE",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
             {
               id: "id-2",
@@ -162,10 +162,10 @@ describe("TransactionsService", () => {
               category: { id: "categoryId-2" },
               amount: 1000,
               description: "description-2",
-              transactionDate: 1678730000,
+              transactionDate: 1678730000000,
               status: "ACTIVE",
-              creationDate: 1678734965,
-              lastUpdateDate: 1678734965,
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
             },
           ]),
         ),
@@ -192,10 +192,10 @@ describe("TransactionsService", () => {
           category: { id: "categoryId-1" },
           amount: 1000,
           description: "description-1",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
           status: "ACTIVE",
-          creationDate: 1678734965,
-          lastUpdateDate: 1678734965,
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
         },
         {
           id: "id-2",
@@ -203,10 +203,10 @@ describe("TransactionsService", () => {
           category: { id: "categoryId-2" },
           amount: 1000,
           description: "description-2",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
           status: "ACTIVE",
-          creationDate: 1678734965,
-          lastUpdateDate: 1678734965,
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
         },
       ]);
     });
@@ -219,7 +219,7 @@ describe("TransactionsService", () => {
         update: jest.fn(() =>
           Promise.resolve({
             id: "id",
-            lastUpdateDate: 1678734965,
+            lastUpdateDate: 1678734965000,
           }),
         ),
       } as unknown as TransactionsRepository;
@@ -233,8 +233,8 @@ describe("TransactionsService", () => {
             name: "name",
             status: "ACTIVE",
             type: "INCOME",
-            creationDate: 1678734965,
-            lastUpdateDate: 1678734965,
+            creationDate: 1678734965000,
+            lastUpdateDate: 1678734965000,
           }),
         ),
       } as unknown as CategoriesRepository;
@@ -252,7 +252,7 @@ describe("TransactionsService", () => {
           category: { id: "categoryId" },
           amount: 1000,
           description: "description",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
         }),
       );
 
@@ -268,12 +268,12 @@ describe("TransactionsService", () => {
         category: { id: "categoryId" },
         amount: 1000,
         description: "description",
-        transactionDate: 1678730000,
+        transactionDate: 1678730000000,
       });
 
       expect(response).toEqual({
         id: "id",
-        lastUpdateDate: 1678734965,
+        lastUpdateDate: 1678734965000,
       });
     });
 
@@ -283,7 +283,7 @@ describe("TransactionsService", () => {
         update: jest.fn(() =>
           Promise.resolve({
             id: "id",
-            lastUpdateDate: 1678734965,
+            lastUpdateDate: 1678734965000,
           }),
         ),
       } as unknown as TransactionsRepository;
@@ -304,7 +304,7 @@ describe("TransactionsService", () => {
           user: { id: "userId" },
           amount: 1000,
           description: "description",
-          transactionDate: 1678730000,
+          transactionDate: 1678730000000,
         }),
       );
 
@@ -316,12 +316,12 @@ describe("TransactionsService", () => {
         user: { id: "userId" },
         amount: 1000,
         description: "description",
-        transactionDate: 1678730000,
+        transactionDate: 1678730000000,
       });
 
       expect(response).toEqual({
         id: "id",
-        lastUpdateDate: 1678734965,
+        lastUpdateDate: 1678734965000,
       });
     });
 
@@ -331,7 +331,7 @@ describe("TransactionsService", () => {
         update: jest.fn(() =>
           Promise.resolve({
             id: "id",
-            lastUpdateDate: 1678734965,
+            lastUpdateDate: 1678734965000,
           }),
         ),
       } as unknown as TransactionsRepository;
@@ -345,8 +345,8 @@ describe("TransactionsService", () => {
             name: "name",
             status: "DELETED",
             type: "INCOME",
-            creationDate: 1678734965,
-            lastUpdateDate: 1678734965,
+            creationDate: 1678734965000,
+            lastUpdateDate: 1678734965000,
           }),
         ),
       } as unknown as CategoriesRepository;
@@ -365,7 +365,7 @@ describe("TransactionsService", () => {
             category: { id: "categoryId" },
             amount: 1000,
             description: "description",
-            transactionDate: 1678730000,
+            transactionDate: 1678730000000,
           }),
         ),
       ).rejects.toThrow(
@@ -408,6 +408,67 @@ describe("TransactionsService", () => {
       });
 
       expect(response).toBeUndefined();
+    });
+  });
+
+  describe("getTransactionsPeriods", () => {
+    it("should return year periods of the user transactions", async () => {
+      // Arrange
+      const transactionsRepoMock = {
+        findByUserId: jest.fn(() =>
+          Promise.resolve([
+            {
+              id: "id-1",
+              user: { id: "userId-1" },
+              category: { id: "categoryId-1" },
+              amount: 1000,
+              description: "description-1",
+              transactionDate: 1722384000000,
+              status: "ACTIVE",
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
+            },
+            {
+              id: "id-2",
+              user: { id: "userId-2" },
+              category: { id: "categoryId-2" },
+              amount: 1000,
+              description: "description-2",
+              transactionDate: 1708992000000,
+              status: "ACTIVE",
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
+            },
+            {
+              id: "id-3",
+              user: { id: "userId-3" },
+              category: { id: "categoryId-3" },
+              amount: 1000,
+              description: "description-3",
+              transactionDate: 1677456000000,
+              status: "ACTIVE",
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
+            },
+          ]),
+        ),
+      } as unknown as TransactionsRepository;
+
+      const service = new TransactionsServiceImpl({
+        transactionsRepo: transactionsRepoMock,
+      } as unknown as TransactionsServiceProps);
+
+      // Act
+      const response = await service.getTransactionsPeriods(
+        new Transaction({
+          user: { id: "userId" },
+        }),
+      );
+
+      // Assert
+      expect(transactionsRepoMock.findByUserId).toHaveBeenCalledWith("userId");
+
+      expect(response).toEqual([2023, 2024]);
     });
   });
 });
