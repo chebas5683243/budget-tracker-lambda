@@ -2,6 +2,7 @@ import "source-map-support/register";
 import { dispatcher } from "./Dispatcher";
 import {
   categoriesController,
+  reportsController,
   settingsController,
   transactionsController,
 } from "../controllers";
@@ -46,7 +47,15 @@ dispatcher.delete("/transactions/{transactionId}", (event) =>
 );
 
 dispatcher.get("/reports/history-periods", () =>
-  transactionsController.getTransactionsPeriods(),
+  reportsController.getTransactionsPeriods(),
+);
+
+dispatcher.get("/reports/history-data", (event) =>
+  reportsController.getTransactionsSummaryInTimeframe(event),
+);
+
+dispatcher.get("/reports/categories-overview", (event) =>
+  reportsController.getTransactionsSummaryByCategoryInPeriod(event),
 );
 
 export const lambdaHandler = async (event: any) => dispatcher.handler(event);

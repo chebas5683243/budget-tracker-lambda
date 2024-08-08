@@ -5,5 +5,4 @@ export interface TransactionsService {
   findByUserId(category: Transaction): Promise<Transaction[]>;
   update(category: Transaction): Promise<Transaction>;
   delete(category: Transaction): Promise<void>;
-  getTransactionsPeriods(category: Transaction): Promise<number[]>;
 }

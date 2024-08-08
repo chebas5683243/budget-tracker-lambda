@@ -4,6 +4,7 @@ import {
   transactionsRepo,
 } from "../repositories";
 import { CategoriesServiceImpl } from "./CategoriesServiceImpl";
+import { ReportsServiceImpl } from "./ReportsServiceImpl";
 import { SettingsServiceImpl } from "./SettingsServiceImpl";
 import { TransactionsServiceImpl } from "./TransactionsServiceImpl";
 
@@ -16,6 +17,11 @@ export const categoriesService = new CategoriesServiceImpl({
 });
 
 export const transactionsService = new TransactionsServiceImpl({
+  transactionsRepo,
+  categoriesRepo,
+});
+
+export const reportsService = new ReportsServiceImpl({
   transactionsRepo,
   categoriesRepo,
 });

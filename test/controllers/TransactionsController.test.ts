@@ -223,35 +223,4 @@ describe("TransactionsController", () => {
       );
     });
   });
-
-  describe("getTransactionsPeriods", () => {
-    it("should return all user transactions", async () => {
-      // Arrange
-      const transactionsServiceMock = {
-        findByUserId: jest.fn(() => Promise.resolve([2023, 2024])),
-      } as unknown as TransactionsService;
-
-      const controller = new TransactionsController({
-        transactionsService: transactionsServiceMock,
-        config: {
-          userId: "userId",
-        },
-      });
-
-      // Act
-      const response = await controller.findByUserId();
-
-      // Assert
-      expect(transactionsServiceMock.findByUserId).toHaveBeenCalledWith({
-        user: { id: "userId" },
-      });
-
-      expect(response).toEqual(
-        expect.objectContaining({
-          statusCode: 200,
-          body: JSON.stringify([2023, 2024]),
-        }),
-      );
-    });
-  });
 });

@@ -3,7 +3,7 @@ import { Category } from "./Category";
 export class CategorySummary {
   category: Partial<Category>;
 
-  _sum: {
+  sum: {
     amount: number;
   };
 

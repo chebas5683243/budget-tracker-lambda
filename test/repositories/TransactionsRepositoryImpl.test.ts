@@ -220,6 +220,98 @@ describe("TransactionsRepository", () => {
     });
   });
 
+  describe("findByPeriod", () => {
+    it("should return all transactions from user in a period", async () => {
+      // Arrange
+      const dynamoDbClientMock = {
+        send: jest.fn(() =>
+          Promise.resolve({
+            Items: [
+              {
+                id: "id-1",
+                userId: "userId-1",
+                categoryId: "categoryId-1",
+                amount: 1000,
+                description: "description-1",
+                transactionDate: 1678730000000,
+                status: "ACTIVE",
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
+              },
+              {
+                id: "id-2",
+                userId: "userId-2",
+                categoryId: "categoryId-2",
+                amount: 1000,
+                description: "description-2",
+                transactionDate: 1678730000000,
+                status: "ACTIVE",
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
+              },
+            ],
+          }),
+        ),
+      } as unknown as DynamoDBDocumentClient;
+
+      const repository = new TransactionsRepositoryImplStub({
+        dynamoDbClient: dynamoDbClientMock,
+        config: {
+          transactionsTable: "transactionsTable",
+        },
+      });
+
+      // Act
+      const response = await repository.findByPeriod(
+        "userId",
+        1678730000000,
+        1678734965000,
+      );
+
+      // Assert
+      expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          input: {
+            TableName: "transactionsTable",
+            IndexName: "userId-transactionDate",
+            KeyConditionExpression:
+              "userId = :userId and transactionDate BETWEEN :startDate AND :endDate",
+            ExpressionAttributeValues: {
+              ":userId": "userId",
+              ":startDate": 1678730000000,
+              ":endDate": 1678734965000,
+            },
+          },
+        }),
+      );
+
+      expect(response).toEqual([
+        {
+          id: "id-1",
+          user: { id: "userId-1" },
+          category: { id: "categoryId-1" },
+          amount: 1000,
+          description: "description-1",
+          transactionDate: 1678730000000,
+          status: "ACTIVE",
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
+        },
+        {
+          id: "id-2",
+          user: { id: "userId-2" },
+          category: { id: "categoryId-2" },
+          amount: 1000,
+          description: "description-2",
+          transactionDate: 1678730000000,
+          status: "ACTIVE",
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
+        },
+      ]);
+    });
+  });
+
   describe("update", () => {
     it("should update transaction", async () => {
       // Arrange

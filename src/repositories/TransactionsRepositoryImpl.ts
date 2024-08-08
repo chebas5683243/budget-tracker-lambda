@@ -84,6 +84,42 @@ export class TransactionsRepositoryImpl
     }
   }
 
+  async findByPeriod(
+    userId: string,
+    startDate: number,
+    endDate: number,
+  ): Promise<Transaction[]> {
+    try {
+      const { Items: items } = await this.props.dynamoDbClient.send(
+        new QueryCommand({
+          TableName: this.props.config.transactionsTable,
+          IndexName: "userId-transactionDate",
+          KeyConditionExpression:
+            "userId = :userId and transactionDate BETWEEN :startDate AND :endDate",
+          ExpressionAttributeValues: {
+            ":userId": userId,
+            ":startDate": startDate,
+            ":endDate": endDate,
+          },
+        }),
+      );
+
+      if (items) {
+        return items.reduce((prev: Transaction[], curr) => {
+          if (curr.status === TransactionStatus.DELETED) return prev;
+          return [...prev, TransactionsMapper.unmarshalTransaction(curr)];
+        }, []);
+      }
+
+      throw new NotFoundError();
+    } catch (e: any) {
+      if (e instanceof GlobalError) {
+        throw e;
+      }
+      throw new UnknownError({ detail: e.message });
+    }
+  }
+
   async update(transaction: Transaction): Promise<Transaction> {
     try {
       const request = TransactionsMapper.marshalTransaction({

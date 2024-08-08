@@ -45,22 +45,6 @@ export class TransactionsServiceImpl implements TransactionsService {
     await this.props.transactionsRepo.delete(transaction);
   }
 
-  async getTransactionsPeriods(transaction: Transaction): Promise<number[]> {
-    const transactions = await this.props.transactionsRepo.findByUserId(
-      transaction.user?.id!,
-    );
-
-    const periods = transactions.reduce((periodsArr, item) => {
-      const transactionYear = new Date(item.transactionDate).getUTCFullYear();
-      if (periodsArr.includes(transactionYear)) return periodsArr;
-      return [...periodsArr, transactionYear];
-    }, [] as number[]);
-
-    periods.sort((a, b) => a - b);
-
-    return periods;
-  }
-
   private async validateCategory(transaction: Transaction) {
     const category = await this.props.categoriesRepo.findById(
       transaction.category.id!,

@@ -102,25 +102,4 @@ export class TransactionsController extends BaseController {
       return this.apiError(e);
     }
   }
-
-  async getTransactionsPeriods() {
-    try {
-      const transaction = Transaction.instanceFor("findByUserId", {
-        user: {
-          id: this.props.config.userId,
-        },
-      });
-
-      const response =
-        await this.props.transactionsService.getTransactionsPeriods(
-          transaction,
-        );
-
-      return this.apiOk({
-        body: response,
-      });
-    } catch (e: any) {
-      return this.apiError(e);
-    }
-  }
 }
