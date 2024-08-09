@@ -1,5 +1,7 @@
 import "source-map-support/register";
+import * as lambda from "aws-lambda";
 import { dispatcher } from "./Dispatcher";
+import { logger } from "../logging";
 import {
   categoriesController,
   reportsController,
@@ -57,5 +59,17 @@ dispatcher.get("/reports/history-data", (event) =>
 dispatcher.get("/reports/categories-overview", (event) =>
   reportsController.getTransactionsSummaryByCategoryInPeriod(event),
 );
+
+dispatcher.custom((event: lambda.APIGatewayTokenAuthorizerEvent) => {
+  if (event.type === "TOKEN") {
+    logger.info("authorizer", { ...event });
+  }
+
+  logger.error("Dispatcher", new Error("No handler found"));
+  return Promise.resolve({
+    statusCode: 404,
+    body: "Not Found",
+  });
+});
 
 export const lambdaHandler = async (event: any) => dispatcher.handler(event);

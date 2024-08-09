@@ -199,6 +199,33 @@ describe("Dispatcher", () => {
     });
   });
 
+  it("should execute custom handler", async () => {
+    // Arrange
+    const dispatcher = new LambdaDispatcher();
+    const handlerMock = jest.fn(() =>
+      Promise.resolve({
+        statusCode: 200,
+        body: "custom handler",
+      }),
+    );
+    dispatcher.custom(handlerMock);
+
+    // Act
+    const response = await dispatcher.handler({
+      resource: "event",
+    } as unknown as lambda.APIGatewayEvent);
+
+    // Assert
+    expect(handlerMock).toHaveBeenCalledWith({
+      resource: "event",
+    });
+
+    expect(response).toEqual({
+      statusCode: 200,
+      body: "custom handler",
+    });
+  });
+
   it("should failed if no handler matches", async () => {
     // Arrange
     const dispatcher = new LambdaDispatcher();

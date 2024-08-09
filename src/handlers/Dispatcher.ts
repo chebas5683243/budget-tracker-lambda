@@ -65,7 +65,6 @@ export class LambdaDispatcher {
     }
 
     if (this.customHandler) {
-      logger.info("authorizer", { ...event });
       return this.customHandler(event);
     }
 
