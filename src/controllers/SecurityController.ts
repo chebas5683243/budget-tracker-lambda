@@ -1,8 +1,11 @@
 import * as lambda from "aws-lambda";
 import { BaseController, BaseControllerProps } from "./BaseController";
 import { logger } from "../logging";
+import { SecurityService } from "../services/SecurityService";
 
-export interface SecurityControllerProps extends BaseControllerProps {}
+export interface SecurityControllerProps extends BaseControllerProps {
+  securityService: SecurityService;
+}
 
 export class SecurityController extends BaseController {
   constructor(protected props: SecurityControllerProps) {
@@ -19,6 +22,10 @@ export class SecurityController extends BaseController {
       }
 
       logger.info("methodArn", event.methodArn);
+
+      const user = this.props.securityService.authenticateUser(credentials);
+
+      logger.info("user", { ...user });
 
       return this.apiOk({
         statusCode: 200,

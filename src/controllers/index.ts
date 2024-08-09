@@ -2,6 +2,7 @@ import { DEFAULT_USER_ID } from "../config";
 import {
   categoriesService,
   reportsService,
+  securityService,
   settingsService,
   transactionsService,
 } from "../services";
@@ -39,4 +40,6 @@ export const reportsController = new ReportsController({
   },
 });
 
-export const securityController = new SecurityController({});
+export const securityController = new SecurityController({
+  securityService,
+});
