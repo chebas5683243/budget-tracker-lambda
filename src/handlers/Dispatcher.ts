@@ -5,6 +5,8 @@ export type Handler = (
   event: lambda.APIGatewayProxyEvent,
 ) => Promise<lambda.APIGatewayProxyResult>;
 
+export type CustomHandler<> = (event: any) => Promise<any>;
+
 enum HttpMethod {
   GET = "GET",
   POST = "POST",
@@ -15,6 +17,8 @@ enum HttpMethod {
 
 export class LambdaDispatcher {
   private handlers: Map<string, Handler> = new Map();
+
+  private customHandler: CustomHandler;
 
   public get(path: string, handler: Handler): void {
     this.handlers.set(`${HttpMethod.GET}:${path}`, handler);
@@ -36,27 +40,39 @@ export class LambdaDispatcher {
     this.handlers.set(`${HttpMethod.DELETE}:${path}`, handler);
   }
 
+  public custom(handler: CustomHandler) {
+    this.customHandler = handler;
+  }
+
   public async handler(
     event: lambda.APIGatewayProxyEvent,
   ): Promise<lambda.APIGatewayProxyResult> {
-    logger.info(event.resource, {
-      httpMethod: event.httpMethod,
-      body: event.body ? JSON.parse(event.body) : null,
-      pathParameters: event.pathParameters,
-      queryStringParameters: event.queryStringParameters,
-    });
+    if ("httpMethod" in event) {
+      logger.info(event.resource, {
+        httpMethod: event.httpMethod,
+        body: event.body ? JSON.parse(event.body) : null,
+        pathParameters: event.pathParameters,
+        queryStringParameters: event.queryStringParameters,
+      });
 
-    const handler = this.handlers.get(`${event.httpMethod}:${event.resource}`);
+      const handler = this.handlers.get(
+        `${event.httpMethod}:${event.resource}`,
+      );
 
-    if (!handler) {
-      logger.error("Dispatcher", new Error("No handler found"));
-      return {
-        statusCode: 404,
-        body: "Not Found",
-      };
+      if (handler) {
+        return handler(event);
+      }
     }
 
-    return handler(event);
+    if (this.customHandler) {
+      return this.customHandler(event);
+    }
+
+    logger.error("Dispatcher", new Error("No handler found"));
+    return {
+      statusCode: 404,
+      body: "Not Found",
+    };
   }
 }
 
