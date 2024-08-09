@@ -14,16 +14,23 @@ export class SecurityServiceImpl implements SecurityService {
   constructor(private props: SecurityServiceProps) {
     if (!this.props.config.clerkPublickKey) {
       throw new UnknownError({
-        detail: "Missing Clerck Public Key env variable",
+        detail: "Missing Clerk Public Key env variable",
       });
     }
   }
 
   async authenticateUser(token: string): Promise<ApiUser> {
-    const claims = jwt.verify(
-      token,
+    logger.info("pem", this.props.config.clerkPublickKey!);
+
+    const pemKey = Buffer.from(
       this.props.config.clerkPublickKey!,
-    ) as jwt.JwtPayload;
+      "base64",
+    ).toString("utf-8");
+
+    logger.info("pemKey", pemKey);
+
+    const claims = jwt.verify(token, pemKey) as jwt.JwtPayload;
+
     logger.info("claims", claims);
     logger.info("sub", claims.sub || "");
 

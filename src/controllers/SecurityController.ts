@@ -23,7 +23,8 @@ export class SecurityController extends BaseController {
 
       logger.info("methodArn", event.methodArn);
 
-      const user = this.props.securityService.authenticateUser(credentials);
+      const user =
+        await this.props.securityService.authenticateUser(credentials);
 
       logger.info("user", { ...user });
 
