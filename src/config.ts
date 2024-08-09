@@ -3,4 +3,5 @@ export const {
   CATEGORIES_TABLE,
   TRANSACTIONS_TABLE,
   DEFAULT_USER_ID,
+  CLERK_PUBLIC_KEY,
 } = process.env;

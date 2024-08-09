@@ -9,6 +9,7 @@ import { SettingsController } from "./SettingsController";
 import { CategoriesController } from "./CategoriesController";
 import { TransactionsController } from "./TransactionsController";
 import { ReportsController } from "./ReportsController";
+import { SecurityController } from "./SecurityController";
 
 export const settingsController = new SettingsController({
   service: settingsService,
@@ -37,3 +38,5 @@ export const reportsController = new ReportsController({
     userId: DEFAULT_USER_ID!,
   },
 });
+
+export const securityController = new SecurityController({});

@@ -1,5 +1,6 @@
 import * as lambda from "aws-lambda";
 import { LambdaDispatcher } from "../../src/handlers/Dispatcher";
+import { logger } from "../../src/logging";
 
 describe("Dispatcher", () => {
   it("should execute a POST handler", async () => {
@@ -247,10 +248,30 @@ describe("Dispatcher", () => {
     // Assert
     expect(handlerMock).not.toHaveBeenCalled();
 
-    expect(response).toEqual({
-      statusCode: 404,
-      body: "Not Found",
-    });
+    expect(response).toEqual(undefined);
+  });
+
+  it("should log an unknown event", async () => {
+    // Prepare
+    const dispatcher = new LambdaDispatcher();
+    const mock = jest.fn(() => Promise.resolve());
+
+    // Execute
+    await dispatcher.handler({
+      resource: "/resource",
+      path: "/resource",
+    } as unknown as lambda.APIGatewayEvent);
+
+    // Validate
+    expect(mock).not.toHaveBeenCalled();
+
+    expect(logger.info).toHaveBeenCalledWith(
+      "Unknown event",
+      JSON.stringify({
+        resource: "/resource",
+        path: "/resource",
+      }),
+    );
   });
 });
 

@@ -5,6 +5,7 @@ import { logger } from "../logging";
 import {
   categoriesController,
   reportsController,
+  securityController,
   settingsController,
   transactionsController,
 } from "../controllers";
@@ -63,13 +64,11 @@ dispatcher.get("/reports/categories-overview", (event) =>
 dispatcher.custom((event: lambda.APIGatewayTokenAuthorizerEvent) => {
   if (event.type === "TOKEN") {
     logger.info("authorizer", { ...event });
+    return securityController.authorizeApiCall(event);
   }
 
-  logger.error("Dispatcher", new Error("No handler found"));
-  return Promise.resolve({
-    statusCode: 404,
-    body: "Not Found",
-  });
+  logger.info("Unknown event", JSON.stringify(event));
+  return Promise.resolve();
 });
 
 export const lambdaHandler = async (event: any) => dispatcher.handler(event);

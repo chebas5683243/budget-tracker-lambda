@@ -44,9 +44,7 @@ export class LambdaDispatcher {
     this.customHandler = handler;
   }
 
-  public async handler(
-    event: lambda.APIGatewayProxyEvent,
-  ): Promise<lambda.APIGatewayProxyResult> {
+  public async handler(event: lambda.APIGatewayProxyEvent) {
     logger.info("test", { ...event });
     if ("httpMethod" in event) {
       logger.info(event.resource, {
@@ -69,11 +67,8 @@ export class LambdaDispatcher {
       return this.customHandler(event);
     }
 
-    logger.error("Dispatcher", new Error("No handler found"));
-    return {
-      statusCode: 404,
-      body: "Not Found",
-    };
+    logger.info("Unknown event", JSON.stringify(event));
+    return Promise.resolve();
   }
 }
 

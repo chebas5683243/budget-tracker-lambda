@@ -32,7 +32,12 @@ describe("BaseController", () => {
 
       // Validate
       expect(response).toEqual({
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         statusCode: 200,
         body: '{"foo":"bar"}',
       });
@@ -51,7 +56,12 @@ describe("BaseController", () => {
 
       // Validate
       expect(response).toEqual({
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         statusCode: 200,
         body: "some string",
       });
@@ -68,7 +78,12 @@ describe("BaseController", () => {
 
       // Validate
       expect(response).toEqual({
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         statusCode: 200,
         body: "",
       });
@@ -85,7 +100,12 @@ describe("BaseController", () => {
 
       // Validate
       expect(response).toEqual({
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         statusCode: 200,
         body: "",
       });
@@ -109,6 +129,10 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
           "Content-Type": "application/png",
         },
         isBase64Encoded: true,
@@ -130,7 +154,12 @@ describe("BaseController", () => {
 
       // Validate
       expect(response).toEqual({
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         statusCode: 204,
         body: "some string",
       });
@@ -153,7 +182,12 @@ describe("BaseController", () => {
 
       // Validate
       expect(response).toEqual({
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         statusCode: 400,
         body: '{"code":"0.1.0","message":"error"}',
       });
@@ -174,7 +208,12 @@ describe("BaseController", () => {
 
       // Validate
       expect(response).toEqual({
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         statusCode: 409,
         body: '{"code":"0.2.0","message":"error"}',
       });
@@ -195,7 +234,12 @@ describe("BaseController", () => {
 
       // Validate
       expect(response).toEqual({
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         statusCode: 500,
         body: '{"code":"0.3.0","message":"error"}',
       });
@@ -216,7 +260,12 @@ describe("BaseController", () => {
 
       // Validate
       expect(response).toEqual({
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         statusCode: 404,
         body: '{"code":"0.4.0","message":"error"}',
       });
@@ -237,7 +286,12 @@ describe("BaseController", () => {
 
       // Validate
       expect(response).toEqual({
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         statusCode: 403,
         body: '{"code":"0.5.0","message":"error"}',
       });
@@ -254,7 +308,12 @@ describe("BaseController", () => {
 
       // Validate
       expect(response).toEqual({
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         statusCode: 500,
         body: '{"code":"0.3.0","message":"Unknown error"}',
       });
@@ -269,7 +328,12 @@ describe("BaseController", () => {
       // Execute
       const response = controller.parseRequest({
         httpMethod: "GET",
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
       } as unknown as lambda.APIGatewayProxyEvent);
 
       // Validate
@@ -283,7 +347,12 @@ describe("BaseController", () => {
       // Execute
       const response = controller.parseRequest({
         httpMethod: "GET",
-        headers: {},
+        headers: {
+          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
         body: JSON.stringify({ foo: "bar" }),
       } as unknown as lambda.APIGatewayProxyEvent);
 

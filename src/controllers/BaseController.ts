@@ -3,6 +3,12 @@ import { logger } from "../logging";
 import { GlobalError } from "../errors/GlobalError";
 import { UnknownError } from "../errors/UnknownError";
 
+export const CORS_HEADERS = {
+  "Access-Control-Allow-Headers": "Content-Type,Authorization",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+};
+
 export interface APIOkOptions
   extends Pick<lambda.APIGatewayProxyResult, "headers" | "isBase64Encoded"> {
   body?: any;
@@ -34,7 +40,7 @@ export abstract class BaseController {
     return {
       statusCode: opts?.statusCode || 200,
       isBase64Encoded: opts?.isBase64Encoded,
-      headers: { ...opts?.headers },
+      headers: { ...CORS_HEADERS, ...opts?.headers },
       body,
     };
   }
@@ -46,7 +52,7 @@ export abstract class BaseController {
     if (error instanceof GlobalError) {
       logger.error("API", { error, detail: error.detail });
       return {
-        headers: { ...headers },
+        headers: { ...CORS_HEADERS, ...headers },
         ...error.getApiData(),
       };
     }
@@ -54,7 +60,7 @@ export abstract class BaseController {
     logger.error("API", error);
 
     return {
-      headers: { ...headers },
+      headers: { ...CORS_HEADERS, ...headers },
       ...new UnknownError({
         detail: error.stack,
       }).getApiData(),
