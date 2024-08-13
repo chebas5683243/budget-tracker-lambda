@@ -1,7 +1,6 @@
 import { verifyToken } from "@clerk/backend";
 import { ApiUser } from "../domains/ApiUser";
 import { SecurityService } from "./SecurityService";
-import { logger } from "../logging";
 import { UnknownError } from "../errors/UnknownError";
 
 export interface SecurityServiceProps {
@@ -25,8 +24,25 @@ export class SecurityServiceImpl implements SecurityService {
       authorizedParties: ["http://localhost:3000"],
     });
 
-    logger.info("sub", verifiedToken.sub);
+    const user = new ApiUser({
+      userId: verifiedToken.sub,
+    });
 
-    return new ApiUser();
+    user.setApis([
+      "/GET/",
+      "/GET/settings/*",
+      "/PATCH/settings/*",
+      "/GET/categories",
+      "/POST/categories",
+      "/PATCH/categories/*",
+      "/DELETE/categories/*",
+      "/GET/transactions",
+      "/POST/transactions",
+      "/PATCH/transactions/*",
+      "/DELETE/transactions/*",
+      "/GET/reports/*",
+    ]);
+
+    return user;
   }
 }

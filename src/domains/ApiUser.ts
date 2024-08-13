@@ -17,9 +17,9 @@ export class ApiUser {
   }
 
   private getBaseResource(methodArn: string) {
-    const items = methodArn.split(":");
-    const apiGatewayId = items[5].split("/");
-    return `${items[0]}:${items[1]}:${items[2]}:${items[3]}:${items[4]}:${apiGatewayId[0]}`;
+    const separator = "/prod";
+    const [apiGatewayId] = methodArn.split(separator);
+    return `${apiGatewayId}/prod`;
   }
 
   private getPolicyDocument(methodArn: string): PolicyDocument {
@@ -30,7 +30,7 @@ export class ApiUser {
           Action: "execute-api:Invoke",
           Effect: "Allow",
           Resource: this.apis?.map(
-            (r) => `${this.getBaseResource(methodArn)}${r}`,
+            (api) => `${this.getBaseResource(methodArn)}${api}`,
           ),
         },
       ],
