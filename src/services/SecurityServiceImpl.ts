@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import { verifyToken } from "@clerk/backend";
 import { ApiUser } from "../domains/ApiUser";
 import { SecurityService } from "./SecurityService";
 import { logger } from "../logging";
@@ -20,19 +20,12 @@ export class SecurityServiceImpl implements SecurityService {
   }
 
   async authenticateUser(token: string): Promise<ApiUser> {
-    logger.info("pem", this.props.config.clerkPublickKey!);
+    const verifiedToken = await verifyToken(token, {
+      jwtKey: this.props.config.clerkPublickKey,
+      authorizedParties: ["http://localhost:3000"],
+    });
 
-    const pemKey = Buffer.from(
-      this.props.config.clerkPublickKey!,
-      "base64",
-    ).toString("utf-8");
-
-    logger.info("pemKey", pemKey);
-
-    const claims = jwt.verify(token, pemKey) as jwt.JwtPayload;
-
-    logger.info("claims", claims);
-    logger.info("sub", claims.sub || "");
+    logger.info("sub", verifiedToken.sub);
 
     return new ApiUser();
   }
