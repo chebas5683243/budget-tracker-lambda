@@ -45,7 +45,6 @@ export class LambdaDispatcher {
   }
 
   public async handler(event: lambda.APIGatewayProxyEvent) {
-    logger.info("test", { ...event });
     if ("httpMethod" in event) {
       logger.info(event.resource, {
         httpMethod: event.httpMethod,
