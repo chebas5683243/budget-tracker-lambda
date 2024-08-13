@@ -5,9 +5,6 @@ import { BaseController, BaseControllerProps } from "./BaseController";
 
 export interface SettingsControllerProps extends BaseControllerProps {
   service: SettingsService;
-  config: {
-    userId: string;
-  };
 }
 
 export class SettingsController extends BaseController {
@@ -15,10 +12,12 @@ export class SettingsController extends BaseController {
     super(props);
   }
 
-  async getSettings() {
+  async getSettings(event: lambda.APIGatewayEvent) {
     try {
+      const { context } = this.parseRequest(event);
+
       const setting = Setting.instanceFor("findByUserId", {
-        user: { id: this.props.config.userId },
+        user: { id: context.userId },
       });
       const response = await this.props.service.findByUserId(setting);
 
@@ -33,15 +32,13 @@ export class SettingsController extends BaseController {
 
   async update(event: lambda.APIGatewayEvent) {
     try {
-      const { body } = this.parseRequest(event);
+      const { body, context } = this.parseRequest(event);
 
       const setting = Setting.instanceFor("update", {
         currency: body.currency,
         language: body.language,
         themePreference: body.themePreference,
-        user: {
-          id: this.props.config.userId,
-        },
+        user: { id: context.userId },
       });
 
       const response = await this.props.service.update(setting);

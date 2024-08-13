@@ -5,9 +5,6 @@ import { BadRequestError } from "../errors/BadRequestError";
 
 export interface ReportsControllerProps {
   reportsService: ReportsService;
-  config: {
-    userId: string;
-  };
 }
 
 export class ReportsController extends BaseController {
@@ -15,10 +12,12 @@ export class ReportsController extends BaseController {
     super(props);
   }
 
-  async getTransactionsPeriods() {
+  async getTransactionsPeriods(event: lambda.APIGatewayEvent) {
     try {
+      const { context } = this.parseRequest(event);
+
       const response = await this.props.reportsService.getTransactionsPeriods(
-        this.props.config.userId,
+        context.userId,
       );
 
       return this.apiOk({
@@ -31,6 +30,7 @@ export class ReportsController extends BaseController {
 
   async getTransactionsSummaryInTimeframe(event: lambda.APIGatewayEvent) {
     try {
+      const { context } = this.parseRequest(event);
       const timeframe = event.queryStringParameters?.timeframe;
       const year = Number(event.queryStringParameters?.year);
       const monthParsed = Number(event.queryStringParameters?.month);
@@ -57,7 +57,7 @@ export class ReportsController extends BaseController {
 
       const response =
         await this.props.reportsService.getTransactionsSummaryInTimeframe(
-          this.props.config.userId,
+          context.userId,
           {
             timeframe,
             year,
@@ -77,6 +77,7 @@ export class ReportsController extends BaseController {
     event: lambda.APIGatewayEvent,
   ) {
     try {
+      const { context } = this.parseRequest(event);
       const startDate = Number(event.queryStringParameters?.startDate);
       const endDate = Number(event.queryStringParameters?.endDate);
 
@@ -88,7 +89,7 @@ export class ReportsController extends BaseController {
 
       const response =
         await this.props.reportsService.getTransactionsSummaryByCategoryInPeriod(
-          this.props.config.userId,
+          context.userId,
           {
             startDate: Number(startDate),
             endDate: Number(endDate),

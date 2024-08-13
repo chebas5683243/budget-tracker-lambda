@@ -12,13 +12,16 @@ describe("ReportsController", () => {
 
       const controller = new ReportsController({
         reportsService: reportsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
-      const response = await controller.getTransactionsPeriods();
+      const response = await controller.getTransactionsPeriods({
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
+      } as unknown as lambda.APIGatewayEvent);
 
       // Asset
       expect(reportsServiceMock.getTransactionsPeriods).toHaveBeenCalledWith(
@@ -58,9 +61,6 @@ describe("ReportsController", () => {
 
       const controller = new ReportsController({
         reportsService: reportsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
@@ -68,6 +68,11 @@ describe("ReportsController", () => {
         queryStringParameters: {
           timeframe: "year",
           year: "2021",
+        },
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
         },
       } as unknown as lambda.APIGatewayEvent);
 
@@ -108,9 +113,6 @@ describe("ReportsController", () => {
 
       const controller = new ReportsController({
         reportsService: reportsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
@@ -118,6 +120,11 @@ describe("ReportsController", () => {
         queryStringParameters: {
           timeframe: "day",
           year: "2021",
+        },
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
         },
       } as unknown as lambda.APIGatewayEvent);
 
@@ -144,9 +151,6 @@ describe("ReportsController", () => {
 
       const controller = new ReportsController({
         reportsService: reportsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
@@ -154,6 +158,11 @@ describe("ReportsController", () => {
         queryStringParameters: {
           timeframe: "month",
           year: "2021",
+        },
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
         },
       } as unknown as lambda.APIGatewayEvent);
 
@@ -225,9 +234,6 @@ describe("ReportsController", () => {
 
       const controller = new ReportsController({
         reportsService: reportsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
@@ -236,6 +242,11 @@ describe("ReportsController", () => {
           queryStringParameters: {
             startDate: "1678734965000",
             endDate: "1678735965000",
+          },
+          requestContext: {
+            authorizer: {
+              userId: "userId",
+            },
           },
         } as unknown as lambda.APIGatewayEvent);
 
@@ -305,9 +316,6 @@ describe("ReportsController", () => {
 
       const controller = new ReportsController({
         reportsService: reportsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
@@ -315,6 +323,11 @@ describe("ReportsController", () => {
         await controller.getTransactionsSummaryByCategoryInPeriod({
           queryStringParameters: {
             startDate: "1678734965000",
+          },
+          requestContext: {
+            authorizer: {
+              userId: "userId",
+            },
           },
         } as unknown as lambda.APIGatewayEvent);
 

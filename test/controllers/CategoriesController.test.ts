@@ -19,9 +19,6 @@ describe("CategoriesController", () => {
 
       const controller = new CategoriesController({
         categoriesService: categoriesServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
@@ -31,6 +28,11 @@ describe("CategoriesController", () => {
           icon: "icon",
           type: "INCOME",
         }),
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
       } as unknown as lambda.APIGatewayEvent);
 
       // Assert
@@ -85,13 +87,16 @@ describe("CategoriesController", () => {
 
       const controller = new CategoriesController({
         categoriesService: categoriesServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
-      const response = await controller.findByUserId();
+      const response = await controller.findByUserId({
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
+      } as unknown as lambda.APIGatewayEvent);
 
       // Assert
       expect(categoriesServiceMock.findByUserId).toHaveBeenCalledWith({
@@ -142,9 +147,6 @@ describe("CategoriesController", () => {
 
       const controller = new CategoriesController({
         categoriesService: categoriesServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
@@ -154,6 +156,11 @@ describe("CategoriesController", () => {
           name: "name",
           icon: "icon",
         }),
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
       } as unknown as lambda.APIGatewayEvent);
 
       // Assert
@@ -185,14 +192,16 @@ describe("CategoriesController", () => {
 
       const controller = new CategoriesController({
         categoriesService: categoriesServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
       const response = await controller.delete({
         pathParameters: { categoryId: "id" },
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
       } as unknown as lambda.APIGatewayEvent);
 
       // Assert

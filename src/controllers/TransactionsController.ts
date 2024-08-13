@@ -5,9 +5,6 @@ import { TransactionsService } from "../services/TransactionsService";
 
 export interface TransactionsControllerProps {
   transactionsService: TransactionsService;
-  config: {
-    userId: string;
-  };
 }
 
 export class TransactionsController extends BaseController {
@@ -17,11 +14,11 @@ export class TransactionsController extends BaseController {
 
   async create(event: lambda.APIGatewayEvent) {
     try {
-      const { body } = this.parseRequest(event);
+      const { body, context } = this.parseRequest(event);
 
       const transaction = Transaction.instanceFor("create", {
         user: {
-          id: this.props.config.userId,
+          id: context.userId,
         },
         category: body.category,
         amount: body.amount,
@@ -40,11 +37,13 @@ export class TransactionsController extends BaseController {
     }
   }
 
-  async findByUserId() {
+  async findByUserId(event: lambda.APIGatewayEvent) {
     try {
+      const { context } = this.parseRequest(event);
+
       const transaction = Transaction.instanceFor("findByUserId", {
         user: {
-          id: this.props.config.userId,
+          id: context.userId,
         },
       });
 
@@ -61,12 +60,12 @@ export class TransactionsController extends BaseController {
 
   async update(event: lambda.APIGatewayEvent) {
     try {
-      const { body } = this.parseRequest(event);
+      const { body, context } = this.parseRequest(event);
 
       const transaction = Transaction.instanceFor("update", {
         id: event.pathParameters?.transactionId,
         user: {
-          id: this.props.config.userId,
+          id: context.userId,
         },
         category: body.category,
         amount: body.amount,
@@ -86,10 +85,12 @@ export class TransactionsController extends BaseController {
 
   async delete(event: lambda.APIGatewayEvent) {
     try {
+      const { context } = this.parseRequest(event);
+
       const transaction = Transaction.instanceFor("delete", {
         id: event.pathParameters?.transactionId,
         user: {
-          id: this.props.config.userId,
+          id: context.userId,
         },
       });
 

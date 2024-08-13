@@ -14,6 +14,8 @@ export class SecurityController extends BaseController {
 
   async authorizeApiCall(event: lambda.APIGatewayTokenAuthorizerEvent) {
     try {
+      logger.info("authorizer", { ...event });
+
       const [authSchema, credentials] =
         event.authorizationToken?.split(" ") || [];
 
@@ -24,10 +26,7 @@ export class SecurityController extends BaseController {
       const user =
         await this.props.securityService.authenticateUser(credentials);
 
-      logger.info("user", { ...user });
-
       const response = user.getAPIGatewayAuthorizerResult(event.methodArn);
-      logger.info("response", { ...response });
 
       return response;
     } catch (e: any) {

@@ -19,9 +19,6 @@ describe("TransactionsController", () => {
 
       const controller = new TransactionsController({
         transactionsService: transactionsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
@@ -34,6 +31,11 @@ describe("TransactionsController", () => {
           description: "description",
           transactionDate: 1678730000000,
         }),
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
       } as unknown as lambda.APIGatewayEvent);
 
       // Assert
@@ -91,13 +93,16 @@ describe("TransactionsController", () => {
 
       const controller = new TransactionsController({
         transactionsService: transactionsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
-      const response = await controller.findByUserId();
+      const response = await controller.findByUserId({
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
+      } as unknown as lambda.APIGatewayEvent);
 
       // Assert
       expect(transactionsServiceMock.findByUserId).toHaveBeenCalledWith({
@@ -148,9 +153,6 @@ describe("TransactionsController", () => {
 
       const controller = new TransactionsController({
         transactionsService: transactionsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
@@ -164,6 +166,11 @@ describe("TransactionsController", () => {
           description: "description",
           transactionDate: 1678730000000,
         }),
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
       } as unknown as lambda.APIGatewayEvent);
 
       // Assert
@@ -199,14 +206,16 @@ describe("TransactionsController", () => {
 
       const controller = new TransactionsController({
         transactionsService: transactionsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
       const response = await controller.delete({
         pathParameters: { transactionId: "id" },
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
       } as unknown as lambda.APIGatewayEvent);
 
       // Assert

@@ -30,8 +30,8 @@ export class SecurityServiceImpl implements SecurityService {
 
     user.setApis([
       "/GET/",
-      "/GET/settings/*",
-      "/PATCH/settings/*",
+      "/GET/settings",
+      "/PATCH/settings",
       "/GET/categories",
       "/POST/categories",
       "/PATCH/categories/*",

@@ -2,6 +2,7 @@ import * as lambda from "aws-lambda";
 import { logger } from "../logging";
 import { GlobalError } from "../errors/GlobalError";
 import { UnknownError } from "../errors/UnknownError";
+import { EventContext } from "../types/Event";
 
 export const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type,Authorization",
@@ -22,9 +23,15 @@ export abstract class BaseController {
 
   public parseRequest(event: lambda.APIGatewayEvent): {
     body?: any;
+    context: EventContext;
   } {
+    const { authorizer } = event.requestContext;
+
     return {
       body: event.body ? JSON.parse(event.body) : undefined,
+      context: {
+        userId: authorizer?.userId,
+      },
     };
   }
 

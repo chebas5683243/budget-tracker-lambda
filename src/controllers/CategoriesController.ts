@@ -5,9 +5,6 @@ import { Category } from "../domains/Category";
 
 export interface CategoriesControllerProps {
   categoriesService: CategoriesService;
-  config: {
-    userId: string;
-  };
 }
 
 export class CategoriesController extends BaseController {
@@ -17,11 +14,11 @@ export class CategoriesController extends BaseController {
 
   async create(event: lambda.APIGatewayEvent) {
     try {
-      const { body } = this.parseRequest(event);
+      const { body, context } = this.parseRequest(event);
 
       const category = Category.instanceFor("create", {
         user: {
-          id: this.props.config.userId,
+          id: context.userId,
         },
         name: body.name,
         icon: body.icon,
@@ -39,11 +36,13 @@ export class CategoriesController extends BaseController {
     }
   }
 
-  async findByUserId() {
+  async findByUserId(event: lambda.APIGatewayEvent) {
     try {
+      const { context } = this.parseRequest(event);
+
       const category = Category.instanceFor("findByUserId", {
         user: {
-          id: this.props.config.userId,
+          id: context.userId,
         },
       });
 
@@ -60,12 +59,12 @@ export class CategoriesController extends BaseController {
 
   async update(event: lambda.APIGatewayEvent) {
     try {
-      const { body } = this.parseRequest(event);
+      const { body, context } = this.parseRequest(event);
 
       const category = Category.instanceFor("update", {
         id: event.pathParameters?.categoryId,
         user: {
-          id: this.props.config.userId,
+          id: context.userId,
         },
         name: body.name,
         icon: body.icon,
@@ -84,10 +83,12 @@ export class CategoriesController extends BaseController {
 
   async delete(event: lambda.APIGatewayEvent) {
     try {
+      const { context } = this.parseRequest(event);
+
       const category = Category.instanceFor("delete", {
         id: event.pathParameters?.categoryId,
         user: {
-          id: this.props.config.userId,
+          id: context.userId,
         },
       });
 

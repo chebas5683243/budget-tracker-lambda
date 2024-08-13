@@ -22,13 +22,22 @@ describe("SettingsController", () => {
 
       const controller = new SettingsController({
         service: settingsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
-      const response = await controller.getSettings();
+      const response = await controller.getSettings({
+        httpMethod: "PATCH",
+        body: JSON.stringify({
+          language: "SPANISH",
+          currency: "PEN",
+          themePreference: "DARK",
+        }),
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
+      } as unknown as lambda.APIGatewayEvent);
 
       // Assert
       expect(settingsServiceMock.findByUserId).toHaveBeenCalledWith({
@@ -68,9 +77,6 @@ describe("SettingsController", () => {
 
       const controller = new SettingsController({
         service: settingsServiceMock,
-        config: {
-          userId: "userId",
-        },
       });
 
       // Act
@@ -81,6 +87,11 @@ describe("SettingsController", () => {
           currency: "PEN",
           themePreference: "DARK",
         }),
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
       } as unknown as lambda.APIGatewayEvent);
 
       // Assert

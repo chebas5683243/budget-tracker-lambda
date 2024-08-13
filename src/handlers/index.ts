@@ -19,13 +19,15 @@ dispatcher.get("/", async () => {
   };
 });
 
-dispatcher.get("/settings", () => settingsController.getSettings());
+dispatcher.get("/settings", (event) => settingsController.getSettings(event));
 
 dispatcher.patch("/settings", (event) => settingsController.update(event));
 
 dispatcher.post("/categories", (event) => categoriesController.create(event));
 
-dispatcher.get("/categories", () => categoriesController.findByUserId());
+dispatcher.get("/categories", (event) =>
+  categoriesController.findByUserId(event),
+);
 
 dispatcher.patch("/categories/{categoryId}", (event) =>
   categoriesController.update(event),
@@ -39,7 +41,9 @@ dispatcher.post("/transactions", (event) =>
   transactionsController.create(event),
 );
 
-dispatcher.get("/transactions", () => transactionsController.findByUserId());
+dispatcher.get("/transactions", (event) =>
+  transactionsController.findByUserId(event),
+);
 
 dispatcher.patch("/transactions/{transactionId}", (event) =>
   transactionsController.update(event),
@@ -49,8 +53,8 @@ dispatcher.delete("/transactions/{transactionId}", (event) =>
   transactionsController.delete(event),
 );
 
-dispatcher.get("/reports/history-periods", () =>
-  reportsController.getTransactionsPeriods(),
+dispatcher.get("/reports/history-periods", (event) =>
+  reportsController.getTransactionsPeriods(event),
 );
 
 dispatcher.get("/reports/history-data", (event) =>
@@ -63,7 +67,6 @@ dispatcher.get("/reports/categories-overview", (event) =>
 
 dispatcher.custom((event: lambda.APIGatewayTokenAuthorizerEvent) => {
   if (event.type === "TOKEN") {
-    logger.info("authorizer", { ...event });
     return securityController.authorizeApiCall(event);
   }
 

@@ -328,16 +328,17 @@ describe("BaseController", () => {
       // Execute
       const response = controller.parseRequest({
         httpMethod: "GET",
-        headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods":
-            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
         },
       } as unknown as lambda.APIGatewayProxyEvent);
 
       // Validate
-      expect(response).toEqual({});
+      expect(response).toEqual({
+        context: { userId: "userId" },
+      });
     });
 
     it("should parse API request made with body", () => {
@@ -347,17 +348,19 @@ describe("BaseController", () => {
       // Execute
       const response = controller.parseRequest({
         httpMethod: "GET",
-        headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods":
-            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
         },
         body: JSON.stringify({ foo: "bar" }),
       } as unknown as lambda.APIGatewayProxyEvent);
 
       // Validate
-      expect(response).toEqual({ body: { foo: "bar" } });
+      expect(response).toEqual({
+        body: { foo: "bar" },
+        context: { userId: "userId" },
+      });
     });
   });
 });
