@@ -43,7 +43,7 @@ export class ApiUser {
     return {
       principalId: this.userId,
       context: {
-        customerId: this.userId,
+        userId: this.userId,
       },
       policyDocument: this.getPolicyDocument(methodArn),
     };
