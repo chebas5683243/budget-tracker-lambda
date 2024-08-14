@@ -33,7 +33,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
@@ -57,7 +58,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
@@ -79,7 +81,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
@@ -101,7 +104,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
@@ -129,7 +133,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
@@ -155,7 +160,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
@@ -183,7 +189,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
@@ -209,7 +216,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
@@ -235,7 +243,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
@@ -261,7 +270,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
@@ -287,7 +297,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
@@ -309,7 +320,8 @@ describe("BaseController", () => {
       // Validate
       expect(response).toEqual({
         headers: {
-          "Access-Control-Allow-Headers": "Content-Type,Authorization",
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods":
             "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",

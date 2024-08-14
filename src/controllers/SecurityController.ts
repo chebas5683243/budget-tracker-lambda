@@ -30,7 +30,8 @@ export class SecurityController extends BaseController {
 
       return response;
     } catch (e: any) {
-      return this.apiError(e);
+      logger.error(e.message);
+      throw new Error("Unauthorized");
     }
   }
 }
