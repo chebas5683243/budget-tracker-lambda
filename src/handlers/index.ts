@@ -65,6 +65,16 @@ dispatcher.get("/reports/categories-overview", (event) =>
   reportsController.getTransactionsSummaryByCategoryInPeriod(event),
 );
 
+dispatcher.post("/webhook/clerk", async (event) => {
+  logger.info("clerk event", { ...event });
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: "Hello from webhook!",
+    }),
+  };
+});
+
 dispatcher.custom((event: lambda.APIGatewayTokenAuthorizerEvent) => {
   if (event.type === "TOKEN") {
     return securityController.authorizeApiCall(event);
