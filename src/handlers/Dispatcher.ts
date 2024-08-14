@@ -67,7 +67,7 @@ export class LambdaDispatcher {
       });
 
       return Promise.resolve(
-        new NotFoundError({ message: "Resource not found" }),
+        new NotFoundError({ message: "Resource not found" }).getApiData(),
       );
     }
 

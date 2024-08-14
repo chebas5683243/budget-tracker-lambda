@@ -1,7 +1,6 @@
 import * as lambda from "aws-lambda";
 import { LambdaDispatcher } from "../../src/handlers/Dispatcher";
 import { logger } from "../../src/logging";
-import { NotFoundError } from "../../src/errors/NotFoundError";
 
 describe("Dispatcher", () => {
   it("should execute a POST handler", async () => {
@@ -249,9 +248,10 @@ describe("Dispatcher", () => {
     // Assert
     expect(handlerMock).not.toHaveBeenCalled();
 
-    expect(response).toEqual(
-      new NotFoundError({ message: "Resource not found" }),
-    );
+    expect(response).toEqual({
+      body: '{"code":"0.4.0","message":"Resource not found"}',
+      statusCode: 404,
+    });
 
     expect(logger.info).toHaveBeenCalledWith("Unknown event", {
       resource: "/resource/{resourceId}",
