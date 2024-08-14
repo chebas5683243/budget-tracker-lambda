@@ -1,5 +1,6 @@
 import * as lambda from "aws-lambda";
 import { logger } from "../logging";
+import { NotFoundError } from "../errors/NotFoundError";
 
 export type Handler = (
   event: lambda.APIGatewayProxyEvent,
@@ -60,6 +61,14 @@ export class LambdaDispatcher {
       if (handler) {
         return handler(event);
       }
+
+      logger.info("Unknown event", {
+        resource: event.resource,
+      });
+
+      return Promise.resolve(
+        new NotFoundError({ message: "Resource not found" }),
+      );
     }
 
     if (this.customHandler) {

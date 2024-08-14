@@ -70,8 +70,8 @@ dispatcher.custom((event: lambda.APIGatewayTokenAuthorizerEvent) => {
     return securityController.authorizeApiCall(event);
   }
 
-  logger.info("Unknown event", JSON.stringify(event));
-  return Promise.resolve();
+  logger.info("Authorizer event not supported", { ...event });
+  throw new Error("Unauthorized");
 });
 
 export const lambdaHandler = async (event: any) => dispatcher.handler(event);
