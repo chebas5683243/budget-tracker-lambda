@@ -65,7 +65,7 @@ dispatcher.get("/reports/categories-overview", (event) =>
   reportsController.getTransactionsSummaryByCategoryInPeriod(event),
 );
 
-dispatcher.post("/webhook/clerk", async (event) => {
+dispatcher.post("/webhooks/clerk", async (event) => {
   logger.info("clerk event", { ...event });
   return {
     statusCode: 200,
