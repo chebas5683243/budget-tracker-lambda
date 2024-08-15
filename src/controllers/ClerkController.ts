@@ -15,7 +15,7 @@ export class ClerkController extends BaseController {
     super(props);
   }
 
-  private async verifyWebhookSignature(
+  private verifyWebhookSignature(
     headers: lambda.APIGatewayProxyEventHeaders,
     payload: string | null,
   ) {
@@ -31,7 +31,7 @@ export class ClerkController extends BaseController {
 
   async processClerkWebhook(event: lambda.APIGatewayEvent) {
     try {
-      const body = await this.verifyWebhookSignature(event.headers, event.body);
+      const body = this.verifyWebhookSignature(event.headers, event.body);
 
       switch (body.type) {
         case ClerkEventType.USER_CREATED: {

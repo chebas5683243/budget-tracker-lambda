@@ -18,10 +18,10 @@ export class ClerkServiceImpl implements ClerkService {
     }
   }
 
-  async verifyWebhookSignature(
+  verifyWebhookSignature(
     headers: WebhookRequiredHeaders,
     payload: string | null,
-  ): Promise<any> {
+  ): any {
     if (
       !headers["svix-id"] ||
       !headers["svix-signature"] ||
