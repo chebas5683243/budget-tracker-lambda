@@ -4,6 +4,7 @@ import { dispatcher } from "./Dispatcher";
 import { logger } from "../logging";
 import {
   categoriesController,
+  clerkController,
   reportsController,
   securityController,
   settingsController,
@@ -65,17 +66,11 @@ dispatcher.get("/reports/categories-overview", (event) =>
   reportsController.getTransactionsSummaryByCategoryInPeriod(event),
 );
 
-dispatcher.post("/webhooks/clerk", async (event) => {
-  logger.info("clerk event", { ...event });
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: "Hello from webhook!",
-    }),
-  };
-});
+dispatcher.post("/webhooks/clerk", (event) =>
+  clerkController.processClerkWebhook(event),
+);
 
-dispatcher.custom((event: lambda.APIGatewayTokenAuthorizerEvent) => {
+dispatcher.custom((event: lambda.APIGatewayAuthorizerEvent) => {
   if (event.type === "TOKEN") {
     return securityController.authorizeApiCall(event);
   }

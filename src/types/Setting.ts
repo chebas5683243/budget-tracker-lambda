@@ -1,5 +1,6 @@
 export enum Currency {
   PEN = "PEN",
+  USD = "USD",
 }
 
 export enum Language {

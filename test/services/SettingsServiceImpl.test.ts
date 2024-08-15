@@ -91,4 +91,40 @@ describe("SettingsService", () => {
       });
     });
   });
+
+  describe("createDefaultSettings", () => {
+    it("should create default settings for a user", async () => {
+      // Arrange
+      const settingsRepoMock = {
+        create: jest.fn(() =>
+          Promise.resolve({
+            id: "id",
+            lastUpdateDate: 1678734965000,
+          }),
+        ),
+      } as unknown as SettingsRepository;
+
+      const service = new SettingsServiceImpl({
+        settingsRepo: settingsRepoMock,
+      });
+
+      // Act
+      const response = await service.createDefaultSettings("userId");
+
+      // Arrange
+      expect(settingsRepoMock.create).toHaveBeenCalledWith({
+        user: {
+          id: "userId",
+        },
+        language: "ENGLISH",
+        currency: "USD",
+        themePreference: "DEFAULT",
+      });
+
+      expect(response).toEqual({
+        id: "id",
+        lastUpdateDate: 1678734965000,
+      });
+    });
+  });
 });

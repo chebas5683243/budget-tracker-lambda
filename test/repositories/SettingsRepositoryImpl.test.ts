@@ -114,13 +114,64 @@ describe("SettingsRepository", () => {
               ":lastUpdateDate": 1678734965000,
             },
             ReturnValues: "ALL_NEW",
-            ConditionExpression: "attribute_exists(id)",
+            ConditionExpression: "attribute_exists(userId)",
           },
         }),
       );
 
       expect(response).toEqual({
         id: "id",
+        lastUpdateDate: 1678734965000,
+      });
+    });
+  });
+
+  describe("create", () => {
+    it("should create user settings", async () => {
+      // Arrange
+      const dynamoClientMock = {
+        send: jest.fn(() => Promise.resolve()),
+      } as unknown as DynamoDBClient;
+
+      const settingsRepository = new SettingsRepositoryImplStub({
+        dynamoDbClient: dynamoClientMock,
+        config: {
+          settingsTable: "settingsTable",
+        },
+      });
+
+      // Act
+      const response = await settingsRepository.create(
+        new Setting({
+          currency: Currency.PEN,
+          language: Language.SPANISH,
+          themePreference: Theme.DARK,
+          user: {
+            id: "userId",
+          },
+        }),
+      );
+
+      // Assert
+      expect(dynamoClientMock.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          input: {
+            Item: {
+              id: "randomId",
+              userId: "userId",
+              currency: "PEN",
+              language: "SPANISH",
+              themePreference: "DARK",
+              lastUpdateDate: 1678734965000,
+            },
+            TableName: "settingsTable",
+            ConditionExpression: "attribute_not_exists(userId)",
+          },
+        }),
+      );
+
+      expect(response).toEqual({
+        id: "randomId",
         lastUpdateDate: 1678734965000,
       });
     });

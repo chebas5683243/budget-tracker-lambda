@@ -8,6 +8,7 @@ import {
 import { UnknownError } from "../../src/errors/UnknownError";
 import { NotFoundError } from "../../src/errors/NotFoundError";
 import { ForbiddenError } from "../../src/errors/ForbiddenError";
+import { UnauthorizedError } from "../../src/errors/UnauthorizedError";
 
 class BaseControllerStub extends BaseController {
   protected getUUID(): any {
@@ -305,6 +306,33 @@ describe("BaseController", () => {
         },
         statusCode: 403,
         body: '{"code":"0.5.0","message":"error"}',
+      });
+    });
+
+    it("should return UnauthorizedError", () => {
+      // Prepare
+      const controller = new BaseControllerStub(
+        {} as unknown as BaseControllerProps,
+      );
+
+      // Execute
+      const response = controller.apiError(
+        new UnauthorizedError({
+          message: "error",
+        }),
+      );
+
+      // Validate
+      expect(response).toEqual({
+        headers: {
+          "Access-Control-Allow-Headers":
+            "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods":
+            "OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD",
+        },
+        statusCode: 401,
+        body: '{"code":"0.6.0","message":"error"}',
       });
     });
 

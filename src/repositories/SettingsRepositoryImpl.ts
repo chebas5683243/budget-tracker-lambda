@@ -1,6 +1,7 @@
 import {
   DynamoDBDocumentClient,
   GetCommand,
+  PutCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
@@ -10,6 +11,7 @@ import { UnknownError } from "../errors/UnknownError";
 import { SettingsMapper } from "../mappers/SettingsMapper";
 import { NotFoundError } from "../errors/NotFoundError";
 import { AbstractDynamoDbRepository } from "./AbstractDynamoDbRepository";
+import { GlobalError } from "../errors/GlobalError";
 
 interface SettingsRepositoryProps {
   dynamoDbClient: DynamoDBDocumentClient;
@@ -72,7 +74,7 @@ export class SettingsRepositoryImpl
           Key: {
             userId: request.user.id,
           },
-          ConditionExpression: "attribute_exists(id)",
+          ConditionExpression: "attribute_exists(userId)",
           ReturnValues: "ALL_NEW",
           ...updateExpression,
         }),
@@ -85,6 +87,34 @@ export class SettingsRepositoryImpl
     } catch (e: any) {
       if (e instanceof ConditionalCheckFailedException) {
         throw new NotFoundError();
+      }
+      throw new UnknownError({ detail: e.message });
+    }
+  }
+
+  async create(setting: Setting): Promise<Setting> {
+    try {
+      const request = SettingsMapper.marshalSetting({
+        ...setting,
+        id: this.getUUID(),
+        lastUpdateDate: this.getTimestamp(),
+      });
+
+      await this.props.dynamoDbClient.send(
+        new PutCommand({
+          Item: request,
+          TableName: this.props.config.settingsTable,
+          ConditionExpression: "attribute_not_exists(userId)",
+        }),
+      );
+
+      return new Setting({
+        id: request?.id,
+        lastUpdateDate: request?.lastUpdateDate,
+      });
+    } catch (e: any) {
+      if (e instanceof GlobalError) {
+        throw e;
       }
       throw new UnknownError({ detail: e.message });
     }
