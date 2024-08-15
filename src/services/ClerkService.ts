@@ -4,5 +4,5 @@ export interface ClerkService {
   verifyWebhookSignature(
     headers: WebhookRequiredHeaders,
     payload: string | null,
-  ): Promise<void>;
+  ): Promise<any>;
 }

@@ -31,9 +31,7 @@ export class ClerkController extends BaseController {
 
   async processClerkWebhook(event: lambda.APIGatewayEvent) {
     try {
-      await this.verifyWebhookSignature(event.headers, event.body);
-
-      const { body } = this.parseRequest(event);
+      const body = await this.verifyWebhookSignature(event.headers, event.body);
 
       switch (body.type) {
         case ClerkEventType.USER_CREATED: {

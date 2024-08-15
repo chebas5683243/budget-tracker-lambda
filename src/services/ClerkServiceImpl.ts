@@ -2,7 +2,6 @@ import { Webhook, type WebhookRequiredHeaders } from "svix";
 import { UnknownError } from "../errors/UnknownError";
 import { ClerkService } from "./ClerkService";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
-import { logger } from "../logging";
 
 export interface ClerkServiceProps {
   config: {
@@ -22,7 +21,7 @@ export class ClerkServiceImpl implements ClerkService {
   async verifyWebhookSignature(
     headers: WebhookRequiredHeaders,
     payload: string | null,
-  ): Promise<void> {
+  ): Promise<any> {
     if (
       !headers["svix-id"] ||
       !headers["svix-signature"] ||
@@ -39,6 +38,6 @@ export class ClerkServiceImpl implements ClerkService {
       headers,
     );
 
-    logger.info("webhook verification", JSON.stringify(response));
+    return response as any;
   }
 }
