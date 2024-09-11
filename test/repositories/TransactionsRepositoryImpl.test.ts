@@ -220,6 +220,165 @@ describe("TransactionsRepository", () => {
     });
   });
 
+  describe("findByCategoryId", () => {
+    it("should return all transactions from category", async () => {
+      // Arrange
+      const dynamoDbClientMock = {
+        send: jest.fn(() =>
+          Promise.resolve({
+            Items: [
+              {
+                id: "id-1",
+                userId: "userId-1",
+                categoryId: "categoryId-1",
+                amount: 1000,
+                description: "description-1",
+                transactionDate: 1678730000000,
+                status: "ACTIVE",
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
+              },
+              {
+                id: "id-2",
+                userId: "userId-2",
+                categoryId: "categoryId-1",
+                amount: 1000,
+                description: "description-2",
+                transactionDate: 1678730000000,
+                status: "ACTIVE",
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
+              },
+            ],
+          }),
+        ),
+      } as unknown as DynamoDBDocumentClient;
+
+      const repository = new TransactionsRepositoryImplStub({
+        dynamoDbClient: dynamoDbClientMock,
+        config: {
+          transactionsTable: "transactionsTable",
+        },
+      });
+
+      // Act
+      const response = await repository.findByCategoryId(
+        "userId",
+        "categoryId-1",
+      );
+
+      // Assert
+      expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          input: {
+            TableName: "transactionsTable",
+            IndexName: "userId-categoryId",
+            KeyConditionExpression:
+              "userId = :userId and categoryId = :categoryId",
+            ExpressionAttributeValues: {
+              ":userId": "userId",
+              ":categoryId": "categoryId-1",
+            },
+          },
+        }),
+      );
+
+      expect(response).toEqual([
+        {
+          id: "id-1",
+          user: { id: "userId-1" },
+          category: { id: "categoryId-1" },
+          amount: 1000,
+          description: "description-1",
+          transactionDate: 1678730000000,
+          status: "ACTIVE",
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
+        },
+        {
+          id: "id-2",
+          user: { id: "userId-2" },
+          category: { id: "categoryId-1" },
+          amount: 1000,
+          description: "description-2",
+          transactionDate: 1678730000000,
+          status: "ACTIVE",
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
+        },
+      ]);
+    });
+
+    it("should return all transactions with no status DELETED", async () => {
+      // Arrange
+      const dynamoDbClientMock = {
+        send: jest.fn(() =>
+          Promise.resolve({
+            Items: [
+              {
+                id: "id-1",
+                userId: "userId-1",
+                categoryId: "categoryId-1",
+                amount: 1000,
+                description: "description-1",
+                transactionDate: 1678730000000,
+                status: "ACTIVE",
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
+              },
+              {
+                id: "id-2",
+                userId: "userId-2",
+                categoryId: "categoryId-2",
+                amount: 1000,
+                description: "description-2",
+                transactionDate: 1678730000000,
+                status: "DELETED",
+                creationDate: 1678734965000,
+                lastUpdateDate: 1678734965000,
+              },
+            ],
+          }),
+        ),
+      } as unknown as DynamoDBDocumentClient;
+
+      const repository = new TransactionsRepositoryImplStub({
+        dynamoDbClient: dynamoDbClientMock,
+        config: {
+          transactionsTable: "transactionsTable",
+        },
+      });
+
+      // Act
+      const response = await repository.findByUserId("userId");
+
+      // Assert
+      expect(dynamoDbClientMock.send).toHaveBeenCalledWith(
+        expect.objectContaining({
+          input: {
+            TableName: "transactionsTable",
+            KeyConditionExpression: "userId = :userId",
+            ExpressionAttributeValues: { ":userId": "userId" },
+          },
+        }),
+      );
+
+      expect(response).toEqual([
+        {
+          id: "id-1",
+          user: { id: "userId-1" },
+          category: { id: "categoryId-1" },
+          amount: 1000,
+          description: "description-1",
+          transactionDate: 1678730000000,
+          status: "ACTIVE",
+          creationDate: 1678734965000,
+          lastUpdateDate: 1678734965000,
+        },
+      ]);
+    });
+  });
+
   describe("findByPeriod", () => {
     it("should return all transactions from user in a period", async () => {
       // Arrange

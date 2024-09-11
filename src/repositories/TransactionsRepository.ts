@@ -3,6 +3,7 @@ import { Transaction } from "../domains/Transaction";
 export interface TransactionsRepository {
   create(transaction: Transaction): Promise<Transaction>;
   findByUserId(userId: string): Promise<Transaction[]>;
+  findByCategoryId(userId: string, categoryId: string): Promise<Transaction[]>;
   findByPeriod(
     userId: string,
     startDate: number,

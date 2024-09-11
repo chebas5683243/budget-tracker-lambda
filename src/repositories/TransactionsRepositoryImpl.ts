@@ -84,6 +84,40 @@ export class TransactionsRepositoryImpl
     }
   }
 
+  async findByCategoryId(
+    userId: string,
+    categoryId: string,
+  ): Promise<Transaction[]> {
+    try {
+      const { Items: items } = await this.props.dynamoDbClient.send(
+        new QueryCommand({
+          TableName: this.props.config.transactionsTable,
+          IndexName: "userId-categoryId",
+          KeyConditionExpression:
+            "userId = :userId and categoryId = :categoryId",
+          ExpressionAttributeValues: {
+            ":userId": userId,
+            ":categoryId": categoryId,
+          },
+        }),
+      );
+
+      if (items) {
+        return items.reduce((prev: Transaction[], curr) => {
+          if (curr.status === TransactionStatus.DELETED) return prev;
+          return [...prev, TransactionsMapper.unmarshalTransaction(curr)];
+        }, []);
+      }
+
+      throw new NotFoundError();
+    } catch (e: any) {
+      if (e instanceof GlobalError) {
+        throw e;
+      }
+      throw new UnknownError({ detail: e.message });
+    }
+  }
+
   async findByPeriod(
     userId: string,
     startDate: number,

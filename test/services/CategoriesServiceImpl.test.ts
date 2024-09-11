@@ -1,6 +1,11 @@
 import { Category } from "../../src/domains/Category";
+import { ConflictError } from "../../src/errors/ConflictError";
 import { CategoriesRepository } from "../../src/repositories/CategoriesRepository";
-import { CategoriesServiceImpl } from "../../src/services/CategoriesServiceImpl";
+import { TransactionsRepository } from "../../src/repositories/TransactionsRepository";
+import {
+  CategoriesServiceImpl,
+  CategoriesServiceProps,
+} from "../../src/services/CategoriesServiceImpl";
 import { CategoryType } from "../../src/types/Category";
 
 describe("CategoriesService", () => {
@@ -18,7 +23,7 @@ describe("CategoriesService", () => {
 
       const service = new CategoriesServiceImpl({
         categoriesRepo: categoriesRepoMock,
-      });
+      } as unknown as CategoriesServiceProps);
 
       // Act
       const response = await service.create(
@@ -81,7 +86,7 @@ describe("CategoriesService", () => {
 
       const service = new CategoriesServiceImpl({
         categoriesRepo: categoriesRepoMock,
-      });
+      } as unknown as CategoriesServiceProps);
 
       // Act
       const response = await service.findByUserId(
@@ -132,7 +137,7 @@ describe("CategoriesService", () => {
 
       const service = new CategoriesServiceImpl({
         categoriesRepo: categoriesRepoMock,
-      });
+      } as unknown as CategoriesServiceProps);
 
       // ACt
       const response = await service.update(
@@ -160,14 +165,19 @@ describe("CategoriesService", () => {
   });
 
   describe("delete", () => {
-    it("should delete category", async () => {
+    it("should delete category if no transactions are associated", async () => {
       // Arrange
       const categoriesRepoMock = {
         delete: jest.fn(() => Promise.resolve()),
       } as unknown as CategoriesRepository;
 
+      const transactionsRepoMock = {
+        findByCategoryId: jest.fn(() => Promise.resolve([])),
+      } as unknown as TransactionsRepository;
+
       const service = new CategoriesServiceImpl({
         categoriesRepo: categoriesRepoMock,
+        transactionsRepo: transactionsRepoMock,
       });
 
       // Act
@@ -179,12 +189,70 @@ describe("CategoriesService", () => {
       );
 
       // Assert
+      expect(transactionsRepoMock.findByCategoryId).toHaveBeenCalledWith(
+        "userId",
+        "id",
+      );
+
       expect(categoriesRepoMock.delete).toHaveBeenCalledWith({
         id: "id",
         user: { id: "userId" },
       });
 
       expect(response).toBeUndefined();
+    });
+
+    it("should throw if category to delete has transactions associated", async () => {
+      // Arrange
+      const categoriesRepoMock = {
+        delete: jest.fn(() => Promise.resolve()),
+      } as unknown as CategoriesRepository;
+
+      const transactionsRepoMock = {
+        findByCategoryId: jest.fn(() =>
+          Promise.resolve([
+            {
+              id: "id-1",
+              user: { id: "userId-1" },
+              category: { id: "categoryId-1" },
+              amount: 1000,
+              description: "description-1",
+              transactionDate: 1678730000000,
+              status: "ACTIVE",
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
+            },
+          ]),
+        ),
+      } as unknown as TransactionsRepository;
+
+      const service = new CategoriesServiceImpl({
+        categoriesRepo: categoriesRepoMock,
+        transactionsRepo: transactionsRepoMock,
+      });
+
+      // Act
+      expect(() =>
+        service.delete(
+          new Category({
+            id: "id",
+            user: { id: "userId" },
+          }),
+        ),
+      ).rejects.toThrow(
+        new ConflictError({
+          detail:
+            "Category cannot be deleted because it is associated with active transactions.",
+        }),
+      );
+
+      // Assert
+      expect(transactionsRepoMock.findByCategoryId).toHaveBeenCalledWith(
+        "userId",
+        "id",
+      );
+
+      expect(categoriesRepoMock.delete).not.toHaveBeenCalled();
     });
   });
 });
