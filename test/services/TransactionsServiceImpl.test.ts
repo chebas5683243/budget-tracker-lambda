@@ -171,9 +171,37 @@ describe("TransactionsService", () => {
         ),
       } as unknown as TransactionsRepository;
 
+      const categoriesRepoMock = {
+        findByUserId: jest.fn(() =>
+          Promise.resolve([
+            {
+              id: "categoryId-1",
+              user: { id: "userId" },
+              icon: "icon-1",
+              name: "name-1",
+              status: "ACTIVE",
+              type: "INCOME",
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
+            },
+            {
+              id: "categoryId-2",
+              user: { id: "userId" },
+              icon: "icon-2",
+              name: "name-2",
+              status: "ACTIVE",
+              type: "EXPENSE",
+              creationDate: 1678734965000,
+              lastUpdateDate: 1678734965000,
+            },
+          ]),
+        ),
+      } as unknown as CategoriesRepository;
+
       const service = new TransactionsServiceImpl({
         transactionsRepo: transactionsRepoMock,
-      } as unknown as TransactionsServiceProps);
+        categoriesRepo: categoriesRepoMock,
+      });
 
       // Act
       const response = await service.findByUserId(
@@ -189,7 +217,12 @@ describe("TransactionsService", () => {
         {
           id: "id-1",
           user: { id: "userId-1" },
-          category: { id: "categoryId-1" },
+          category: {
+            id: "categoryId-1",
+            name: "name-1",
+            icon: "icon-1",
+            type: "INCOME",
+          },
           amount: 1000,
           description: "description-1",
           transactionDate: 1678730000000,
@@ -200,7 +233,12 @@ describe("TransactionsService", () => {
         {
           id: "id-2",
           user: { id: "userId-2" },
-          category: { id: "categoryId-2" },
+          category: {
+            id: "categoryId-2",
+            name: "name-2",
+            icon: "icon-2",
+            type: "EXPENSE",
+          },
           amount: 1000,
           description: "description-2",
           transactionDate: 1678730000000,
@@ -356,7 +394,7 @@ describe("TransactionsService", () => {
         categoriesRepo: categoriesRepoMock,
       });
 
-      // At
+      // Act
       expect(
         service.update(
           new Transaction({

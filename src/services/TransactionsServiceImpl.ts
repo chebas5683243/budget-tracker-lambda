@@ -1,3 +1,4 @@
+import { Category } from "../domains/Category";
 import { Transaction } from "../domains/Transaction";
 import { BadRequestError } from "../errors/BadRequestError";
 import { CategoriesRepository } from "../repositories/CategoriesRepository";
@@ -23,9 +24,24 @@ export class TransactionsServiceImpl implements TransactionsService {
   }
 
   async findByUserId(transaction: Transaction): Promise<Transaction[]> {
-    const transactions = await this.props.transactionsRepo.findByUserId(
-      transaction.user?.id!,
+    const [transactions, categories] = await Promise.all([
+      this.props.transactionsRepo.findByUserId(transaction.user?.id!),
+      this.props.categoriesRepo.findByUserId(transaction.user?.id!),
+    ]);
+
+    const categoriesMap = new Map(
+      categories.map((category) => [category.id, category]),
     );
+
+    transactions.forEach((txn) => {
+      const category = categoriesMap.get(txn.category.id!)!;
+      txn.category = new Category({
+        id: category.id,
+        name: category.name,
+        icon: category.icon,
+        type: category.type,
+      });
+    });
 
     return transactions;
   }
