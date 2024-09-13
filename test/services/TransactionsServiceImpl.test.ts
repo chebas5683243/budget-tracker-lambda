@@ -143,7 +143,7 @@ describe("TransactionsService", () => {
     it("should return all user transactions", async () => {
       // Arrange
       const transactionsRepoMock = {
-        findByUserId: jest.fn(() =>
+        findByPeriod: jest.fn(() =>
           Promise.resolve([
             {
               id: "id-1",
@@ -204,14 +204,20 @@ describe("TransactionsService", () => {
       });
 
       // Act
-      const response = await service.findByUserId(
+      const response = await service.findByPeriod(
         new Transaction({
           user: { id: "userId" },
+          startDate: 1678734965000,
+          endDate: 1678734965001,
         }),
       );
 
       // Assert
-      expect(transactionsRepoMock.findByUserId).toHaveBeenCalledWith("userId");
+      expect(transactionsRepoMock.findByPeriod).toHaveBeenCalledWith(
+        "userId",
+        1678734965000,
+        1678734965001,
+      );
 
       expect(response).toEqual([
         {

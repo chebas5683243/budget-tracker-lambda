@@ -41,14 +41,16 @@ export class TransactionsController extends BaseController {
     try {
       const { context } = this.parseRequest(event);
 
-      const transaction = Transaction.instanceFor("findByUserId", {
+      const transaction = Transaction.instanceFor("findByPeriod", {
         user: {
           id: context.userId,
         },
+        startDate: Number(event.queryStringParameters?.startDate),
+        endDate: Number(event.queryStringParameters?.endDate),
       });
 
       const response =
-        await this.props.transactionsService.findByUserId(transaction);
+        await this.props.transactionsService.findByPeriod(transaction);
 
       return this.apiOk({
         body: response,

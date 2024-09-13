@@ -23,9 +23,13 @@ export class TransactionsServiceImpl implements TransactionsService {
     return newTransaction;
   }
 
-  async findByUserId(transaction: Transaction): Promise<Transaction[]> {
+  async findByPeriod(transaction: Transaction): Promise<Transaction[]> {
     const [transactions, categories] = await Promise.all([
-      this.props.transactionsRepo.findByUserId(transaction.user?.id!),
+      this.props.transactionsRepo.findByPeriod(
+        transaction.user?.id!,
+        transaction.startDate,
+        transaction.endDate,
+      ),
       this.props.categoriesRepo.findByUserId(transaction.user?.id!),
     ]);
 

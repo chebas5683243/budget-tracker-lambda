@@ -26,6 +26,10 @@ export class Transaction {
 
   lastUpdateDate: number;
 
+  startDate: number;
+
+  endDate: number;
+
   constructor(data?: Partial<Transaction>) {
     if (data) {
       Object.assign(this, data);

@@ -65,7 +65,7 @@ describe("TransactionsController", () => {
     it("should return all user transactions", async () => {
       // Arrange
       const transactionsServiceMock = {
-        findByUserId: jest.fn(() =>
+        findByPeriod: jest.fn(() =>
           Promise.resolve([
             {
               id: "id-1",
@@ -97,6 +97,10 @@ describe("TransactionsController", () => {
 
       // Act
       const response = await controller.findByUserId({
+        queryStringParameters: {
+          startDate: "1678734965000",
+          endDate: "1678734965001",
+        },
         requestContext: {
           authorizer: {
             userId: "userId",
@@ -105,8 +109,10 @@ describe("TransactionsController", () => {
       } as unknown as lambda.APIGatewayEvent);
 
       // Assert
-      expect(transactionsServiceMock.findByUserId).toHaveBeenCalledWith({
+      expect(transactionsServiceMock.findByPeriod).toHaveBeenCalledWith({
         user: { id: "userId" },
+        startDate: 1678734965000,
+        endDate: 1678734965001,
       });
 
       expect(response).toEqual(

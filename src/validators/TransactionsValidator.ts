@@ -13,11 +13,17 @@ export class TransactionsValidator {
     transactionDate: z.number(),
   });
 
-  static findByUserId = z.object({
-    user: z.strictObject({
-      id: z.string(),
-    }),
-  });
+  static findByPeriod = z
+    .object({
+      user: z.strictObject({
+        id: z.string(),
+      }),
+      startDate: z.number(),
+      endDate: z.number(),
+    })
+    .refine((data) => data.endDate >= data.startDate, {
+      message: "End date should be greater than start date",
+    });
 
   static update = z
     .object({
