@@ -284,6 +284,10 @@ describe("ReportsService", () => {
 
     it("should return transactions data summary by months in a year", async () => {
       // Arrange
+      jest
+        .spyOn(Date.prototype, "getTimezoneOffset")
+        .mockImplementation(() => 180);
+
       const transactionsRepoMock = {
         findByPeriod: jest.fn(() =>
           Promise.resolve([
