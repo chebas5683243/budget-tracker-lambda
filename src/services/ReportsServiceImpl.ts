@@ -29,7 +29,12 @@ export class ReportsServiceImpl implements ReportsService {
 
   async getTransactionsSummaryInTimeframe(
     userId: string,
-    params: { timeframe: "month" | "year"; year: number; month?: number },
+    params: {
+      timezoneOffset: number;
+      timeframe: "month" | "year";
+      year: number;
+      month?: number;
+    },
   ): Promise<HistoryDataRecord[]> {
     const { timeframeSize, startDate, endDate, isYearTimeframe } =
       this.getTimeframeConfiguration(params);
@@ -59,9 +64,17 @@ export class ReportsServiceImpl implements ReportsService {
     );
 
     transactions.forEach((transaction) => {
-      const periodUnit = isYearTimeframe
-        ? new Date(transaction.transactionDate).getUTCMonth()
-        : new Date(transaction.transactionDate).getUTCDate() - 1;
+      const timezoneMonth = this.getTimezoneMonth(
+        transaction.transactionDate,
+        params.timezoneOffset,
+      );
+
+      const timezoneDate = this.getTimezoneDate(
+        transaction.transactionDate,
+        params.timezoneOffset,
+      );
+
+      const periodUnit = isYearTimeframe ? timezoneMonth : timezoneDate - 1;
 
       if (transaction.category.type === CategoryType.INCOME) {
         dataSummary[periodUnit].balance.income += transaction.amount;
@@ -71,6 +84,22 @@ export class ReportsServiceImpl implements ReportsService {
     });
 
     return dataSummary;
+  }
+
+  private getTimezoneMonth(timestamp: number, timezoneOffset: number) {
+    const serverOffset = this.getServerTimezoneOffsetInMilliseconds();
+    return new Date(timestamp + serverOffset - timezoneOffset).getMonth();
+  }
+
+  private getTimezoneDate(timestamp: number, timezoneOffset: number) {
+    const serverOffset = this.getServerTimezoneOffsetInMilliseconds();
+    return new Date(timestamp + serverOffset - timezoneOffset).getDate();
+  }
+
+  private getServerTimezoneOffsetInMilliseconds() {
+    const timezoneOffsetInMinutes = new Date().getTimezoneOffset();
+    const timezoneOffsetInMilliseconds = timezoneOffsetInMinutes * 60 * 1000;
+    return timezoneOffsetInMilliseconds;
   }
 
   async getTransactionsSummaryByCategoryInPeriod(
@@ -116,6 +145,7 @@ export class ReportsServiceImpl implements ReportsService {
   }
 
   private getTimeframeConfiguration(params: {
+    timezoneOffset: number;
     timeframe: "month" | "year";
     year: number;
     month?: number;
@@ -125,16 +155,18 @@ export class ReportsServiceImpl implements ReportsService {
     if (isYearTimeframe) {
       return {
         isYearTimeframe,
-        startDate: Date.UTC(params.year),
-        endDate: Date.UTC(params.year + 1) - 1,
+        startDate: Date.UTC(params.year) - params.timezoneOffset,
+        endDate: Date.UTC(params.year + 1) - 1 - params.timezoneOffset,
         timeframeSize: 12,
       };
     }
 
     return {
       isYearTimeframe,
-      startDate: Date.UTC(params.year, params.month!, 1),
-      endDate: Date.UTC(params.year, params.month! + 1, 1) - 1,
+      startDate:
+        Date.UTC(params.year, params.month!, 1) - params.timezoneOffset,
+      endDate:
+        Date.UTC(params.year, params.month! + 1, 1) - 1 - params.timezoneOffset,
       timeframeSize: new Date(
         Date.UTC(params.year, params.month! + 1, 0),
       ).getUTCDate(),

@@ -31,10 +31,18 @@ export class ReportsController extends BaseController {
   async getTransactionsSummaryInTimeframe(event: lambda.APIGatewayEvent) {
     try {
       const { context } = this.parseRequest(event);
+      const timezoneOffset =
+        Number(event.queryStringParameters?.timezoneOffset) * 60 * 1000;
       const timeframe = event.queryStringParameters?.timeframe;
       const year = Number(event.queryStringParameters?.year);
       const monthParsed = Number(event.queryStringParameters?.month);
       const month = Number.isInteger(monthParsed) ? monthParsed : undefined;
+
+      if (!Number.isInteger(timezoneOffset)) {
+        throw new BadRequestError({
+          message: "Invalid timezoneOffset",
+        });
+      }
 
       if (
         !timeframe ||
@@ -59,6 +67,7 @@ export class ReportsController extends BaseController {
         await this.props.reportsService.getTransactionsSummaryInTimeframe(
           context.userId,
           {
+            timezoneOffset,
             timeframe,
             year,
             month: Number.isInteger(month) ? month : undefined,

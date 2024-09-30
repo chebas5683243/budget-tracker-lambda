@@ -5,7 +5,12 @@ export interface ReportsService {
   getTransactionsPeriods(userId: string): Promise<number[]>;
   getTransactionsSummaryInTimeframe(
     userId: string,
-    params: { timeframe: "month" | "year"; year: number; month?: number },
+    params: {
+      timezoneOffset: number;
+      timeframe: "month" | "year";
+      year: number;
+      month?: number;
+    },
   ): Promise<HistoryDataRecord[]>;
   getTransactionsSummaryByCategoryInPeriod(
     userId: string,

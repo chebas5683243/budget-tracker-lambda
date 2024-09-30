@@ -66,6 +66,10 @@ describe("ReportsService", () => {
   describe("getTransactionsSummaryInTimeframe", () => {
     it("should return transactions data summary by days in a month", async () => {
       // Arrange
+      jest
+        .spyOn(Date.prototype, "getTimezoneOffset")
+        .mockImplementation(() => 180);
+
       const transactionsRepoMock = {
         findByPeriod: jest.fn(() =>
           Promise.resolve([
@@ -206,65 +210,75 @@ describe("ReportsService", () => {
       // Act
       const response = await service.getTransactionsSummaryInTimeframe(
         "userId",
-        { timeframe: "month", year: 2021, month: 7 },
+        {
+          timezoneOffset: 300 * 60 * 1000,
+          timeframe: "month",
+          year: 2021,
+          month: 7,
+        },
       );
 
       // Assert
       expect(transactionsRepoMock.findByPeriod).toHaveBeenCalledWith(
         "userId",
-        1627776000000,
-        1630454399999,
+        1627776000000 - 300 * 60 * 1000,
+        1630454399999 - 300 * 60 * 1000,
       );
 
       expect(categoriesRepoMock.findByUserId).toHaveBeenCalledWith("userId");
 
       expect(response).toEqual([
-        { year: 2021, month: 7, day: 1, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 2, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 3, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 4, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 5, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 6, balance: { expense: 0, income: 0 } },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 1 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 2 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 3 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 4 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 5 },
         {
           year: 2021,
           month: 7,
-          day: 7,
           balance: { expense: 900, income: 700 },
+          day: 6,
         },
-        { year: 2021, month: 7, day: 8, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 9, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 10, balance: { expense: 0, income: 0 } },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 7 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 8 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 9 },
         {
           year: 2021,
           month: 7,
-          day: 11,
           balance: { expense: 0, income: 1300 },
+          day: 10,
         },
-        { year: 2021, month: 7, day: 12, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 13, balance: { expense: 600, income: 0 } },
-        { year: 2021, month: 7, day: 14, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 15, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 16, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 17, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 18, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 19, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 20, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 21, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 22, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 23, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 24, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 25, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 26, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 27, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 28, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 29, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 7, day: 30, balance: { expense: 0, income: 0 } },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 11 },
         {
           year: 2021,
           month: 7,
-          day: 31,
-          balance: { expense: 100, income: 330 },
+          balance: { expense: 600, income: 0 },
+          day: 12,
         },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 13 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 14 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 15 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 16 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 17 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 18 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 19 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 20 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 21 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 22 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 23 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 24 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 25 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 26 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 27 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 28 },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 29 },
+        {
+          year: 2021,
+          month: 7,
+          balance: { expense: 100, income: 330 },
+          day: 30,
+        },
+        { year: 2021, month: 7, balance: { expense: 0, income: 0 }, day: 31 },
       ]);
     });
 
@@ -410,14 +424,14 @@ describe("ReportsService", () => {
       // Act
       const response = await service.getTransactionsSummaryInTimeframe(
         "userId",
-        { timeframe: "year", year: 2021 },
+        { timezoneOffset: 300 * 60 * 1000, timeframe: "year", year: 2021 },
       );
 
       // Assert
       expect(transactionsRepoMock.findByPeriod).toHaveBeenCalledWith(
         "userId",
-        1609459200000,
-        1640995199999,
+        1609459200000 - 300 * 60 * 1000,
+        1640995199999 - 300 * 60 * 1000,
       );
 
       expect(categoriesRepoMock.findByUserId).toHaveBeenCalledWith("userId");
@@ -425,8 +439,8 @@ describe("ReportsService", () => {
       expect(response).toEqual([
         { year: 2021, month: 0, balance: { expense: 0, income: 0 } },
         { year: 2021, month: 1, balance: { expense: 0, income: 0 } },
-        { year: 2021, month: 2, balance: { expense: 900, income: 700 } },
-        { year: 2021, month: 3, balance: { expense: 0, income: 1300 } },
+        { year: 2021, month: 2, balance: { expense: 900, income: 2000 } },
+        { year: 2021, month: 3, balance: { expense: 0, income: 0 } },
         { year: 2021, month: 4, balance: { expense: 0, income: 0 } },
         { year: 2021, month: 5, balance: { expense: 0, income: 0 } },
         { year: 2021, month: 6, balance: { expense: 0, income: 0 } },

@@ -66,6 +66,7 @@ describe("ReportsController", () => {
       // Act
       const response = await controller.getTransactionsSummaryInTimeframe({
         queryStringParameters: {
+          timezoneOffset: "60",
           timeframe: "year",
           year: "2021",
         },
@@ -80,6 +81,7 @@ describe("ReportsController", () => {
       expect(
         reportsServiceMock.getTransactionsSummaryInTimeframe,
       ).toHaveBeenCalledWith("userId", {
+        timezoneOffset: 60 * 60 * 1000,
         timeframe: "year",
         year: 2021,
       });
@@ -138,11 +140,52 @@ describe("ReportsController", () => {
           statusCode: 400,
           body: JSON.stringify({
             code: "0.1.0",
+            message: "Invalid timezoneOffset",
+          }),
+        }),
+      );
+    });
+
+    it("should return bad request error if invalid timeframe or year", async () => {
+      // Arrange
+      const reportsServiceMock = {
+        getTransactionsSummaryInTimeframe: jest.fn(() => Promise.resolve()),
+      } as unknown as ReportsService;
+
+      const controller = new ReportsController({
+        reportsService: reportsServiceMock,
+      });
+
+      // Act
+      const response = await controller.getTransactionsSummaryInTimeframe({
+        queryStringParameters: {
+          timezoneOffset: "60",
+          timeframe: "day",
+          year: "2021",
+        },
+        requestContext: {
+          authorizer: {
+            userId: "userId",
+          },
+        },
+      } as unknown as lambda.APIGatewayEvent);
+
+      // Assert
+      expect(
+        reportsServiceMock.getTransactionsSummaryInTimeframe,
+      ).not.toHaveBeenCalled();
+
+      expect(response).toEqual(
+        expect.objectContaining({
+          statusCode: 400,
+          body: JSON.stringify({
+            code: "0.1.0",
             message: "Invalid timeframe or year",
           }),
         }),
       );
     });
+
     it("should return bad request error if invalid month", async () => {
       // Arrange
       const reportsServiceMock = {
@@ -156,6 +199,7 @@ describe("ReportsController", () => {
       // Act
       const response = await controller.getTransactionsSummaryInTimeframe({
         queryStringParameters: {
+          timezoneOffset: "60",
           timeframe: "month",
           year: "2021",
         },
