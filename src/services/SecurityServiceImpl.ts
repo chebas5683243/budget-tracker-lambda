@@ -21,6 +21,11 @@ export class SecurityServiceImpl implements SecurityService {
   }
 
   async authenticateUser(token: string): Promise<ApiUser> {
+    logger.debug(
+      "Authorized parties",
+      this.props.config.authorizedParties?.toString() || "",
+    );
+
     const verifiedToken = await verifyToken(token, {
       jwtKey: this.props.config.clerkPublickKey,
       authorizedParties: [
@@ -28,11 +33,6 @@ export class SecurityServiceImpl implements SecurityService {
         "https://budget-tracker-web.vercel.app",
       ],
     });
-
-    logger.debug(
-      "Authorized parties",
-      this.props.config.authorizedParties?.toString() || "",
-    );
 
     const user = new ApiUser({
       userId: verifiedToken.sub,
