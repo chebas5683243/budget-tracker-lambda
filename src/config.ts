@@ -4,4 +4,5 @@ export const {
   TRANSACTIONS_TABLE,
   CLERK_PUBLIC_KEY,
   CLERK_WEBHOOK_SECRET,
+  AUTHORIZED_PARTIES,
 } = process.env;

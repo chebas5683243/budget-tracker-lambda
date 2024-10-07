@@ -6,6 +6,7 @@ import { UnknownError } from "../errors/UnknownError";
 export interface SecurityServiceProps {
   config: {
     clerkPublickKey?: string;
+    authorizedParties?: string[];
   };
 }
 
@@ -21,7 +22,7 @@ export class SecurityServiceImpl implements SecurityService {
   async authenticateUser(token: string): Promise<ApiUser> {
     const verifiedToken = await verifyToken(token, {
       jwtKey: this.props.config.clerkPublickKey,
-      authorizedParties: ["http://localhost:3000"],
+      authorizedParties: this.props.config.authorizedParties,
     });
 
     const user = new ApiUser({

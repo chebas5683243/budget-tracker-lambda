@@ -1,5 +1,9 @@
 import { Webhook } from "svix";
-import { CLERK_PUBLIC_KEY, CLERK_WEBHOOK_SECRET } from "../config";
+import {
+  AUTHORIZED_PARTIES,
+  CLERK_PUBLIC_KEY,
+  CLERK_WEBHOOK_SECRET,
+} from "../config";
 import {
   categoriesRepo,
   settingsRepo,
@@ -34,6 +38,7 @@ export const reportsService = new ReportsServiceImpl({
 export const securityService = new SecurityServiceImpl({
   config: {
     clerkPublickKey: CLERK_PUBLIC_KEY,
+    authorizedParties: AUTHORIZED_PARTIES?.split(",") || [],
   },
 });
 
