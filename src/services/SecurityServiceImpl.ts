@@ -27,10 +27,9 @@ export class SecurityServiceImpl implements SecurityService {
   }
 
   async authenticateUser(token: string): Promise<ApiUser> {
-    logger.info(
-      "Authorized parties",
-      this.props.config.authorizedParties?.toString() || "",
-    );
+    logger.info("Authorized parties", {
+      authorizedParties: this.props.config.authorizedParties,
+    });
 
     const verifiedToken = await verifyToken(token, {
       jwtKey: this.props.config.clerkPublickKey,
