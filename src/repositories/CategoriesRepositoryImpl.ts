@@ -28,6 +28,12 @@ export class CategoriesRepositoryImpl
 {
   constructor(private props: CategoriesRepositoryProps) {
     super();
+
+    if (!this.props.config.categoriesTable) {
+      throw new UnknownError({
+        detail: "Missing Categories Table env variable",
+      });
+    }
   }
 
   async create(category: Category): Promise<Category> {

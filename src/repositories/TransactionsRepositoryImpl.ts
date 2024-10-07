@@ -27,6 +27,12 @@ export class TransactionsRepositoryImpl
 {
   constructor(private props: TransactionsRepositoryProps) {
     super();
+
+    if (!this.props.config.transactionsTable) {
+      throw new UnknownError({
+        detail: "Missing Transactions Table env variable",
+      });
+    }
   }
 
   async create(transaction: Transaction): Promise<Transaction> {

@@ -7,7 +7,7 @@ import { logger } from "../logging";
 export interface SecurityServiceProps {
   config: {
     clerkPublickKey?: string;
-    authorizedParties?: string[];
+    authorizedParties: string[];
   };
 }
 
@@ -18,17 +18,23 @@ export class SecurityServiceImpl implements SecurityService {
         detail: "Missing Clerk Public Key env variable",
       });
     }
+
+    if (this.props.config.authorizedParties.length === 0) {
+      throw new UnknownError({
+        detail: "Missing Authorized Parties env variable",
+      });
+    }
   }
 
   async authenticateUser(token: string): Promise<ApiUser> {
-    logger.debug(
+    logger.info(
       "Authorized parties",
       this.props.config.authorizedParties?.toString() || "",
     );
 
     const verifiedToken = await verifyToken(token, {
       jwtKey: this.props.config.clerkPublickKey,
-      authorizedParties: ["http://localhost:3000"],
+      authorizedParties: this.props.config.authorizedParties,
     });
 
     const user = new ApiUser({
