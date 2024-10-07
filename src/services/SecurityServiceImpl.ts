@@ -28,10 +28,7 @@ export class SecurityServiceImpl implements SecurityService {
 
     const verifiedToken = await verifyToken(token, {
       jwtKey: this.props.config.clerkPublickKey,
-      authorizedParties: [
-        "http://localhost:3000",
-        "https://budget-tracker-web.vercel.app",
-      ],
+      authorizedParties: ["http://localhost:3000"],
     });
 
     const user = new ApiUser({
