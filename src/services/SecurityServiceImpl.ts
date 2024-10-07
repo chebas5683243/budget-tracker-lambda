@@ -2,6 +2,7 @@ import { verifyToken } from "@clerk/backend";
 import { ApiUser } from "../domains/ApiUser";
 import { SecurityService } from "./SecurityService";
 import { UnknownError } from "../errors/UnknownError";
+import { logger } from "../logging";
 
 export interface SecurityServiceProps {
   config: {
@@ -22,8 +23,16 @@ export class SecurityServiceImpl implements SecurityService {
   async authenticateUser(token: string): Promise<ApiUser> {
     const verifiedToken = await verifyToken(token, {
       jwtKey: this.props.config.clerkPublickKey,
-      authorizedParties: this.props.config.authorizedParties,
+      authorizedParties: [
+        "http://localhost:3000",
+        "https://budget-tracker-web.vercel.app",
+      ],
     });
+
+    logger.debug(
+      "Authorized parties",
+      this.props.config.authorizedParties?.toString() || "",
+    );
 
     const user = new ApiUser({
       userId: verifiedToken.sub,
